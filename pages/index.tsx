@@ -5,6 +5,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import { guestLogin } from "../api/auth";
 import { createGame } from "../api/game";
 import { User } from "../api/interface";
+import UserDetails from "../components/landing/UserDetails";
 
 const Home: NextPage<AppProps> = () => {
   const [code, setCode] = useState("");
@@ -16,7 +17,6 @@ const Home: NextPage<AppProps> = () => {
   const newGame = async () => {
     console.log("Start a new game");
     if (name) {
-      // const gameCode = await GameUtils.startNewGame(name, 3);
       const gameDetails = await createGame();
       setGameCode(gameDetails.identifier);
     } else {
@@ -27,36 +27,11 @@ const Home: NextPage<AppProps> = () => {
     }
   };
 
-  const joinGame = async () => {
-    // // let code = code;
-    // const currentPlayer = name;
-    // // this checks if the code exists
-    // // if it has maximum of 6 characters
-    // // if it is only digits and 6 digits
-    // if (code && code.length === 6 && code.match(/\d{6}/)) {
-    //   try {
-    //     // join the game
-    //     const gameData = await GameUtils.joinGame(code, currentPlayer);
-    //     // this.setState({ errorMessage: "Joined Successfully" })
-    //     //todo: redux selectors
-    //     // this.props.dispatch({ type: "ADD_GAME_DATA", payload: gameData });
-    //     // navigate to another page
-    //     setNavigateTo("/lobby");
-    //   } catch (err) {
-    //     // TODO: show error
-    //     console.log(err);
-    //     // this.setState({ errorMessage: "Something went wrong while joining the game" })
-    //   }
-    // } else {
-    //   // TODO: Show error
-    //   // this.setState({ errorMessage: "You have entered an incorrect code" })
-    // }
-  };
+  const joinGame = async () => {};
 
   const doGuestLogin = async () => {
     if (name && name.length >= 3) {
       const user = await guestLogin(name);
-
       setUser(user);
     }
   };
@@ -101,28 +76,7 @@ const Home: NextPage<AppProps> = () => {
                   </div>
                 </div>
               ) : (
-                <>
-                  <h2 className="my-4 text-light">Welcome :)</h2>
-                  <div className="name w-100 mb-3">
-                    <input
-                      className="form-control"
-                      type="text"
-                      maxLength={15}
-                      value={name}
-                      onChange={e => setName(e.target.value)}
-                      placeholder="Enter your display name..."
-                    />
-                  </div>
-                  <div className="submit w-100 mb-3">
-                    <Button
-                      variant="primary"
-                      onClick={() => doGuestLogin()}
-                      className="w-100"
-                    >
-                      Let's go!
-                    </Button>
-                  </div>
-                </>
+                <UserDetails onClick={doGuestLogin} onNameUpdated={setName} />
               )}
 
               {/* <div className="code w-100 mb-3">
