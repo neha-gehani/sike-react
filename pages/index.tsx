@@ -4,13 +4,14 @@ import { AppProps } from "next/app";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { guestLogin } from "../api/auth";
 import { createGame } from "../api/game";
+import { User } from "../api/interface";
 
 const Home: NextPage<AppProps> = () => {
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [gameCode, setGameCode] = useState(0);
+  const [gameCode, setGameCode] = useState("");
   const [navigateTo, setNavigateTo] = useState("");
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<User>({ id: -1, token: "", role: "" });
 
   const newGame = async () => {
     console.log("Start a new game");
@@ -52,24 +53,21 @@ const Home: NextPage<AppProps> = () => {
     // }
   };
 
-  const login = async () => {
+  const doGuestLogin = async () => {
     if (name && name.length >= 3) {
-      await guestLogin(name);
+      const user = await guestLogin(name);
+
+      setUser(user);
     }
   };
 
-  const doGuestLogin = () => {
-    const user = login();
-    setUser(user);
-  };
-
   return (
-    <div className="bg-dark h-100">
+    <div className="bg-dark page">
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">
           <Col>
             <div className="h-100 d-flex flex-column justify-content-start align-items-center">
-              {name ? (
+              {user && user.id !== -1 ? (
                 <div className="text-light w-100 text-center">
                   <h2>Hello, {name}!</h2>
                   <div className="submit w-100 mb-3">
