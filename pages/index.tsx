@@ -1,28 +1,29 @@
 import React, { useState } from "react";
 import { NextPage } from "next";
-import AppLayout from "../components/global/AppLayout";
-import { AppProps, Container } from "next/app";
-import { Row, Col, Button } from "react-bootstrap";
+import { AppProps } from "next/app";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import { guestLogin } from "../api/auth";
+import { createGame } from "../api/game";
 
 const Home: NextPage<AppProps> = () => {
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [gameCode, setGameCode] = useState(0);
   const [navigateTo, setNavigateTo] = useState("");
-  const [test, setTest] = useState({});
+  const [user, setUser] = useState({});
 
   const newGame = async () => {
     console.log("Start a new game");
-    // if (name) {
-    //   // const gameCode = await GameUtils.startNewGame(name, 3);
-    //   const gameDetails = await createGame();
-    //   setGameCode(gameDetails.identifier);
-    // } else {
-    //   console.log(name);
-    //   console.log("we can't do shit");
-    //   // TODO: show error
-    //   // this.setState({ errorMessage: "You have not entered a name" });
-    // }
+    if (name) {
+      // const gameCode = await GameUtils.startNewGame(name, 3);
+      const gameDetails = await createGame();
+      setGameCode(gameDetails.identifier);
+    } else {
+      console.log(name);
+      console.log("we can't do shit");
+      // TODO: show error
+      // this.setState({ errorMessage: "You have not entered a name" });
+    }
   };
 
   const joinGame = async () => {
@@ -52,17 +53,14 @@ const Home: NextPage<AppProps> = () => {
   };
 
   const login = async () => {
-    // if (name && name.length >= 3) {
-    //   await guestLogin(name);
-    // }
+    if (name && name.length >= 3) {
+      await guestLogin(name);
+    }
   };
 
   const doGuestLogin = () => {
-    // const user = login();
-    // dispatch({ type: "ADD_USER_DATA", payload: { user: user } });
-    // setTest(user);
-    // // console.log("------------------");
-    // // console.log(user);
+    const user = login();
+    setUser(user);
   };
 
   return (
