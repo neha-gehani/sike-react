@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { NextPage } from "next";
-import { AppProps } from "next/app";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { guestLogin } from "../api/auth";
 import { createGame } from "../api/game";
 import { User } from "../api/interface";
-import UserDetails from "../components/landing/UserDetails";
+import TextForm from "../components/global/TextForm";
+import Router from "next/router";
+import { LayoutPageProps } from "./_app";
 
-const Home: NextPage<AppProps> = () => {
-  const [code, setCode] = useState("");
+const Home: NextPage<LayoutPageProps> = () => {
   const [name, setName] = useState("");
   const [gameCode, setGameCode] = useState("");
-  const [navigateTo, setNavigateTo] = useState("");
   const [user, setUser] = useState<User>({ id: -1, token: "", role: "" });
 
   const newGame = async () => {
@@ -27,7 +26,9 @@ const Home: NextPage<AppProps> = () => {
     }
   };
 
-  const joinGame = async () => {};
+  const joinGame = () => {
+    Router.push("/game/join");
+  };
 
   const doGuestLogin = async () => {
     if (name && name.length >= 3) {
@@ -76,27 +77,14 @@ const Home: NextPage<AppProps> = () => {
                   </div>
                 </div>
               ) : (
-                <UserDetails onClick={doGuestLogin} onNameUpdated={setName} />
-              )}
-
-              {/* <div className="code w-100 mb-3">
-                <input
-                  className="form-control"
-                  type="text"
-                  maxLength="6"
-                  value={code}
-                  onChange={e => setCode(e.target.value)}
-                  placeholder="Enter a 6 digit code..."
+                <TextForm
+                  onClick={doGuestLogin}
+                  onTextUpdated={setName}
+                  headerText="Welcome :)"
+                  buttonText="Let's go!"
+                  placeholder="Tell us your name"
                 />
-              </div> */}
-
-              {/*gameCode ? (
-                <p className="text-center">
-                  Ask your friends to join: {gameCode}
-                </p>
-              ) : (
-                ""
-              )*/}
+              )}
             </div>
           </Col>
         </Row>
