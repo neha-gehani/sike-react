@@ -17,3 +17,9 @@ export const startGame = async gameId => {
 
   return result;
 };
+
+export const getGame = async gameId => {
+  const result = await httpClient.get(`/game/${gameId}`);
+
+  return result;
+};
