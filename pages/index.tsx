@@ -1,203 +1,158 @@
-import Head from 'next/head'
+import React, { useState } from "react";
+import { NextPage } from "next";
+import AppLayout from "../components/global/AppLayout";
+import { AppProps, Container } from "next/app";
+import { Row, Col, Button } from "react-bootstrap";
 
-const Home = () => (
-  <div className="container">
-    <Head>
-      <title>Create Next App</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+const Home: NextPage<AppProps> = () => {
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
+  const [gameCode, setGameCode] = useState(0);
+  const [navigateTo, setNavigateTo] = useState("");
+  const [test, setTest] = useState({});
 
-    <main>
-      <h1 className="title">
-        Welcome to <a href="https://nextjs.org">Next.js!</a>
-      </h1>
+  const newGame = async () => {
+    console.log("Start a new game");
+    // if (name) {
+    //   // const gameCode = await GameUtils.startNewGame(name, 3);
+    //   const gameDetails = await createGame();
+    //   setGameCode(gameDetails.identifier);
+    // } else {
+    //   console.log(name);
+    //   console.log("we can't do shit");
+    //   // TODO: show error
+    //   // this.setState({ errorMessage: "You have not entered a name" });
+    // }
+  };
 
-      <p className="description">
-        Get started by editing <code>pages/index.js</code>
-      </p>
+  const joinGame = async () => {
+    // // let code = code;
+    // const currentPlayer = name;
+    // // this checks if the code exists
+    // // if it has maximum of 6 characters
+    // // if it is only digits and 6 digits
+    // if (code && code.length === 6 && code.match(/\d{6}/)) {
+    //   try {
+    //     // join the game
+    //     const gameData = await GameUtils.joinGame(code, currentPlayer);
+    //     // this.setState({ errorMessage: "Joined Successfully" })
+    //     //todo: redux selectors
+    //     // this.props.dispatch({ type: "ADD_GAME_DATA", payload: gameData });
+    //     // navigate to another page
+    //     setNavigateTo("/lobby");
+    //   } catch (err) {
+    //     // TODO: show error
+    //     console.log(err);
+    //     // this.setState({ errorMessage: "Something went wrong while joining the game" })
+    //   }
+    // } else {
+    //   // TODO: Show error
+    //   // this.setState({ errorMessage: "You have entered an incorrect code" })
+    // }
+  };
 
-      <div className="grid">
-        <a href="https://nextjs.org/docs" className="card">
-          <h3>Documentation &rarr;</h3>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+  const login = async () => {
+    // if (name && name.length >= 3) {
+    //   await guestLogin(name);
+    // }
+  };
 
-        <a href="https://nextjs.org/learn" className="card">
-          <h3>Learn &rarr;</h3>
-          <p>Learn about Next.js in an interactive course with quizzes!</p>
-        </a>
+  const doGuestLogin = () => {
+    // const user = login();
+    // dispatch({ type: "ADD_USER_DATA", payload: { user: user } });
+    // setTest(user);
+    // // console.log("------------------");
+    // // console.log(user);
+  };
 
-        <a
-          href="https://github.com/zeit/next.js/tree/master/examples"
-          className="card"
-        >
-          <h3>Examples &rarr;</h3>
-          <p>Discover and deploy boilerplate example Next.js projects.</p>
-        </a>
+  return (
+    <div className="bg-dark h-100">
+      <Container className="h-100">
+        <Row className="landing-container h-100 align-items-stretch">
+          <Col>
+            <div className="h-100 d-flex flex-column justify-content-start align-items-center">
+              {name ? (
+                <div className="text-light w-100 text-center">
+                  <h2>Hello, {name}!</h2>
+                  <div className="submit w-100 mb-3">
+                    <Button
+                      variant="primary"
+                      onClick={() => joinGame()}
+                      className="w-100"
+                    >
+                      Join Game
+                    </Button>
+                  </div>
+                  <div className="submit w-100 mb-3">
+                    <Button
+                      variant="primary"
+                      onClick={() => newGame()}
+                      className="w-100 mb-4"
+                    >
+                      Start New Game
+                    </Button>
+                    {gameCode ? (
+                      <p className="text-center">
+                        Ask your friends to join:{" "}
+                        <span className="text-primary text-bold">
+                          {" "}
+                          {gameCode}
+                        </span>
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h2 className="my-4 text-light">Welcome :)</h2>
+                  <div className="name w-100 mb-3">
+                    <input
+                      className="form-control"
+                      type="text"
+                      maxLength={15}
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      placeholder="Enter your display name..."
+                    />
+                  </div>
+                  <div className="submit w-100 mb-3">
+                    <Button
+                      variant="primary"
+                      onClick={() => doGuestLogin()}
+                      className="w-100"
+                    >
+                      Let's go!
+                    </Button>
+                  </div>
+                </>
+              )}
 
-        <a
-          href="https://zeit.co/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          className="card"
-        >
-          <h3>Deploy &rarr;</h3>
-          <p>
-            Instantly deploy your Next.js site to a public URL with ZEIT Now.
-          </p>
-        </a>
-      </div>
-    </main>
+              {/* <div className="code w-100 mb-3">
+                <input
+                  className="form-control"
+                  type="text"
+                  maxLength="6"
+                  value={code}
+                  onChange={e => setCode(e.target.value)}
+                  placeholder="Enter a 6 digit code..."
+                />
+              </div> */}
 
-    <footer>
-      <a
-        href="https://zeit.co?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Powered by <img src="/zeit.svg" alt="ZEIT Logo" />
-      </a>
-    </footer>
+              {/*gameCode ? (
+                <p className="text-center">
+                  Ask your friends to join: {gameCode}
+                </p>
+              ) : (
+                ""
+              )*/}
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
+};
 
-    <style jsx>{`
-      .container {
-        min-height: 100vh;
-        padding: 0 0.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      main {
-        padding: 5rem 0;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      footer {
-        width: 100%;
-        height: 100px;
-        border-top: 1px solid #eaeaea;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      footer img {
-        margin-left: 0.5rem;
-      }
-
-      footer a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-
-      .title a {
-        color: #0070f3;
-        text-decoration: none;
-      }
-
-      .title a:hover,
-      .title a:focus,
-      .title a:active {
-        text-decoration: underline;
-      }
-
-      .title {
-        margin: 0;
-        line-height: 1.15;
-        font-size: 4rem;
-      }
-
-      .title,
-      .description {
-        text-align: center;
-      }
-
-      .description {
-        line-height: 1.5;
-        font-size: 1.5rem;
-      }
-
-      code {
-        background: #fafafa;
-        border-radius: 5px;
-        padding: 0.75rem;
-        font-size: 1.1rem;
-        font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-          DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-      }
-
-      .grid {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-
-        max-width: 800px;
-        margin-top: 3rem;
-      }
-
-      .card {
-        margin: 1rem;
-        flex-basis: 45%;
-        padding: 1.5rem;
-        text-align: left;
-        color: inherit;
-        text-decoration: none;
-        border: 1px solid #eaeaea;
-        border-radius: 10px;
-        transition: color 0.15s ease, border-color 0.15s ease;
-      }
-
-      .card:hover,
-      .card:focus,
-      .card:active {
-        color: #0070f3;
-        border-color: #0070f3;
-      }
-
-      .card h3 {
-        margin: 0 0 1rem 0;
-        font-size: 1.5rem;
-      }
-
-      .card p {
-        margin: 0;
-        font-size: 1.25rem;
-        line-height: 1.5;
-      }
-
-      @media (max-width: 600px) {
-        .grid {
-          width: 100%;
-          flex-direction: column;
-        }
-      }
-    `}</style>
-
-    <style jsx global>{`
-      html,
-      body {
-        padding: 0;
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-          Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-    `}</style>
-  </div>
-)
-
-export default Home
+export default Home;
