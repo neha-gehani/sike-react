@@ -1,21 +1,37 @@
 import React, { useState } from "react";
 import { NextPage, NextPageContext } from "next";
-import { Container, Row, Col } from "react-bootstrap";
-import { Game } from "../../api/interface";
-import { getGame } from "../../api/game";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import { Game, User } from "../../api/interface";
+import { getGame, joinGame, startGame } from "../../api/game";
 import { LayoutPageProps } from "../_app";
+import { getUser } from "../../api/user";
+import GameNotStarted from "../../components/game/GameNotStarted";
 
 interface GamePageProps extends LayoutPageProps {
-  game: Game;
+  gameData: Game;
+  user: User;
 }
 
-const GamePage: NextPage<GamePageProps> = ({ game }) => {
+const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
+  const [game, setGame] = useState(gameData);
+
+  const setGameStart = async () => {
+    const gameDetails = await startGame(game.id);
+    setGame(gameDetails);
+  };
+
   return (
     <div className="bg-dark page">
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">
           <Col>
-            <h3>Waiting for other participants...</h3>
+            {game.status === "created" && (
+              <GameNotStarted
+                onClickStart={setGameStart}
+                game={game}
+                user={user}
+              />
+            )}
           </Col>
         </Row>
       </Container>
@@ -25,9 +41,11 @@ const GamePage: NextPage<GamePageProps> = ({ game }) => {
 
 GamePage.getInitialProps = async (context: NextPageContext) => {
   const gameData = await getGame("setting-sip");
+  const userData = await getUser();
 
   return {
-    game: gameData
+    gameData: gameData,
+    user: userData
   };
 };
 

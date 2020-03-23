@@ -14,8 +14,8 @@ export const joinGame = async (gameId): Promise<Game> => {
   return result;
 };
 
-export const startGame = async gameId => {
-  const result = await httpClient.post(`/game/${gameId}/start`);
+export const startGame = async (gameId): Promise<Game> => {
+  const result = await httpClient.post<Game>(`/game/${gameId}/start`);
 
   return result;
 };

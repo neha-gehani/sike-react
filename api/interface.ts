@@ -15,4 +15,5 @@ export interface Game {
   user: User;
   id: number;
   participants: Participant[];
+  status: "created" | "started";
 }
