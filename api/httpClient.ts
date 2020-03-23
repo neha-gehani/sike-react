@@ -5,11 +5,11 @@ const callApi = async requestParams => {
    method,
    headers: {
      "Content-Type": "application/json",
-     Authorization: `Bearer ${process.env.TEMP_TOKEN}`
+     Authorization: `Bearer <token>`
    }
  };
 
- let finalUrl = process.env.BASE_URL+url;
+ let finalUrl = `http://sike-api.herokuapp.com${url}`;
  if (method === "get") {
    const queryParams = new URLSearchParams(data);
    finalUrl = `${url}?${queryParams}`;
