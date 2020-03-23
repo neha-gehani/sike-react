@@ -27,7 +27,7 @@ const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
   let finalUrl = `http://sike-api.herokuapp.com${url}`;
   if (method === "get") {
     const queryParams = new URLSearchParams(data);
-    finalUrl = `${url}?${queryParams}`;
+    finalUrl = `${finalUrl}?${queryParams}`;
   } else {
     options["body"] = JSON.stringify(data);
   }
@@ -48,6 +48,7 @@ const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
   }
 
   if (response && response.status >= 200 && response.status < 300) {
+    console.log(responseBody);
     return responseBody;
   }
 
@@ -55,11 +56,12 @@ const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
 };
 
 export const httpClient = {
-  async get<T>(url, params?): Promise<T> {
+  async get<T>(url, params?, token?): Promise<T> {
     return callApi({
       method: "get",
       url,
-      data: params
+      data: params,
+      token: token
     });
   },
   async post<T>(url, params?, token?): Promise<T> {

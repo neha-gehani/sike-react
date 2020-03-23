@@ -8,8 +8,8 @@ export const createGame = async (): Promise<Game> => {
   return result;
 };
 
-export const joinGame = async gameId => {
-  const result = await httpClient.post(`/game/${gameId}/join`);
+export const joinGame = async (gameId): Promise<Game> => {
+  const result = await httpClient.post<Game>(`/game/${gameId}/join`, {}, TOKEN);
 
   return result;
 };
@@ -20,8 +20,8 @@ export const startGame = async gameId => {
   return result;
 };
 
-export const getGame = async gameId => {
-  const result = await httpClient.get(`/game/${gameId}`);
+export const getGame = async (gameId): Promise<Game> => {
+  const result = await httpClient.get<Game>(`/game/${gameId}`, {}, TOKEN);
 
   return result;
 };
