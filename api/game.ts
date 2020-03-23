@@ -1,7 +1,9 @@
 import { httpClient } from "./httpClient";
+import { TOKEN } from "../helpers/constants";
+import { Game } from "./interface";
 
-export const createGame = async () => {
-  const result = await httpClient.post("/game");
+export const createGame = async (): Promise<Game> => {
+  const result = await httpClient.post<Game>("/game", {}, TOKEN);
 
   return result;
 };
