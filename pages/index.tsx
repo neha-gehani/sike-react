@@ -45,36 +45,34 @@ const Home: NextPage<LayoutPageProps> = () => {
             <div className="h-100 d-flex flex-column justify-content-start align-items-center">
               {user && user.id !== -1 ? (
                 <div className="text-light w-100 text-center">
-                  <h2>Hello, {name}!</h2>
-                  <div className="submit w-100 mb-3">
-                    <Button
-                      variant="primary"
-                      onClick={() => joinGame()}
-                      className="w-100"
-                    >
-                      Join Game
-                    </Button>
-                  </div>
-                  <div className="submit w-100 mb-3">
-                    <Button
-                      variant="primary"
-                      onClick={() => newGame()}
-                      className="w-100 mb-4"
-                    >
-                      Start New Game
-                    </Button>
-                    {gameCode ? (
-                      <p className="text-center">
-                        Ask your friends to join:{" "}
-                        <span className="text-primary text-bold">
-                          {" "}
-                          {gameCode}
-                        </span>
-                      </p>
-                    ) : (
-                      ""
-                    )}
-                  </div>
+                  {gameCode ? (
+                    <>
+                      <p className="text-center">Ask your friends to join:</p>
+                      <h3 className="text-primary text-bold">{gameCode}</h3>
+                    </>
+                  ) : (
+                    <>
+                      <h2>Hello, {name}!</h2>
+                      <div className="submit w-100 mb-3">
+                        <Button
+                          variant="primary"
+                          onClick={() => joinGame()}
+                          className="w-100"
+                        >
+                          Join Game
+                        </Button>
+                      </div>
+                      <div className="submit w-100 mb-3">
+                        <Button
+                          variant="primary"
+                          onClick={() => newGame()}
+                          className="w-100 mb-4"
+                        >
+                          Start New Game
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </div>
               ) : (
                 <TextForm
