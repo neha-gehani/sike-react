@@ -31,11 +31,7 @@ const Lobby = props => {
   return (
     <>
       <GameCode />
-      <GameNotStarted
-        onClickStart={props.startNewGame}
-        game={props.game}
-        user={props.user}
-      />
+      <GameNotStarted onClickStart={props.startNewGame} />
     </>
   );
 };

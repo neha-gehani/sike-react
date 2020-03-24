@@ -4,9 +4,7 @@ import { Game, User } from "../../api/interface";
 import { useSelector } from "react-redux";
 import { InitialState } from "../../store";
 
-interface GameProps {
-  // game: Game;
-}
+interface GameProps {}
 
 interface StateProps {
   game: Game;
