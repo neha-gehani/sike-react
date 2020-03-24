@@ -29,6 +29,7 @@ const GameQuestion: React.FC<GameProps> = ({ game, user, onQuestionAnswered }) =
     <>
       <h3 className="mb-4">{currentQuestion.questionStr}</h3>
       <textarea 
+        className="answer"
         onChange={e => updateAnswer(e.target.value)}
       ></textarea>
       <Button
