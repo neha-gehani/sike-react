@@ -16,39 +16,46 @@ interface GamePageProps extends LayoutPageProps {
 }
 
 const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
-  const [game, setGame] = useState(gameData);
-  const hasGameStarted = isGameStarted(game.status);
-
-  const setGameStart = async () => {
-    const gameDetails = await startGame(game.id);
-    setGame(gameDetails);
-  };
-
-  return (
-    <div className="bg-dark page">
-      <Container className="h-100">
-        <Row className="landing-container h-100 align-items-stretch">
-          <Col>
-            {!hasGameStarted && (
-              <>
-                <GameCode game={game} />
-                <GameNotStarted
-                  onClickStart={setGameStart}
-                  game={game}
-                  user={user}
-                />
-              </>
-            )}
-          </Col>
-        </Row>
-      </Container>
-    </div>
-  );
+  if(!!gameData) {
+    const [game, setGame] = useState(gameData);
+    const hasGameStarted = isGameStarted(game.status);
+  
+    const setGameStart = async () => {
+      const gameDetails = await startGame(game.id);
+      setGame(gameDetails);
+    };
+  
+    return (
+      <div className="bg-dark page">
+        <Container className="h-100">
+          <Row className="landing-container h-100 align-items-stretch">
+            <Col>
+              {!hasGameStarted && (
+                <>
+                  <GameCode game={game} />
+                  <GameNotStarted
+                    onClickStart={setGameStart}
+                    game={game}
+                    user={user}
+                  />
+                </>
+              )}
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    );
+  }
+  return (<div></div>);
+  
 };
 
 GamePage.getInitialProps = async (context: NextPageContext) => {
   const params = context.query as any;
+  console.log(params.gameId)
+
   const gameData = await getGame(params.gameId);
+  console.log({gameData})
   const userData = await getUser();
 
   return {

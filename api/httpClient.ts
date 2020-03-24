@@ -37,10 +37,11 @@ const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
   let response;
   let responseBody;
 
+  console.log('Making Fetch call',{ finalUrl, options})
   try {
     response = await fetch(finalUrl, options);
   } catch (err) {
-    console.log(err);
+    console.log({err});
   }
 
   try {
@@ -54,11 +55,12 @@ const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
     return responseBody;
   }
 
-  console.log("ERROR");
+  console.log("ERROR", {finalUrl});
 };
 
 export const httpClient = {
   async get<T>(url, params?, isAuthenticated?): Promise<T> {
+    console.log({url, params, isAuthenticated})
     return callApi({
       method: "get",
       url,
