@@ -6,6 +6,9 @@ import { getGame, joinGame, startGame } from "../../api/game";
 import { LayoutPageProps } from "../_app";
 import { getUser } from "../../api/user";
 import GameNotStarted from "../../components/game/GameNotStarted";
+import GameCode from "../../components/game/GameCode";
+import { isGameStarted } from "../../helpers/game";
+import { useRouter } from "next/router";
 
 interface GamePageProps extends LayoutPageProps {
   gameData: Game;
@@ -14,6 +17,8 @@ interface GamePageProps extends LayoutPageProps {
 
 const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
   const [game, setGame] = useState(gameData);
+  const hasGameStarted = isGameStarted(game.status);
+  console.log(hasGameStarted);
 
   const setGameStart = async () => {
     const gameDetails = await startGame(game.id);
@@ -25,12 +30,15 @@ const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">
           <Col>
-            {game.status === "created" && (
-              <GameNotStarted
-                onClickStart={setGameStart}
-                game={game}
-                user={user}
-              />
+            {!hasGameStarted && (
+              <>
+                <GameCode game={game} />
+                <GameNotStarted
+                  onClickStart={setGameStart}
+                  game={game}
+                  user={user}
+                />
+              </>
             )}
           </Col>
         </Row>
@@ -40,7 +48,8 @@ const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
 };
 
 GamePage.getInitialProps = async (context: NextPageContext) => {
-  const gameData = await getGame("setting-sip");
+  const params = context.query as any;
+  const gameData = await getGame(params.gameId);
   const userData = await getUser();
 
   return {
