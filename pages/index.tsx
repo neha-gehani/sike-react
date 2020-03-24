@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NextPage } from "next";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { guestLogin } from "../api/auth";
+import {guestLogin} from "../api/auth";
 import { createGame } from "../api/game";
 import { User } from "../api/interface";
 import TextForm from "../components/global/TextForm";

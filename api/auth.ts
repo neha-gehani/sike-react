@@ -3,33 +3,41 @@ import Cookie from "js-cookie";
 import { User } from "./interface";
 import { COOKIES } from "../helpers/constants";
 
+export class Auth {
+  private token: string;
+  
+  constructor() {
+    const token = Cookie.get(COOKIES.authToken);
+    this.setToken(token);
+  }
 
-export const guestLogin = async (name: string): Promise<User> => {
+  getToken() {
+    return this.token;
+  }
+
+  setToken(newToken: string) {
+    Cookie.set(COOKIES.authToken, newToken);
+    this.token = newToken;
+  }
+}
+
+const auth = new Auth();
+
+export const guestLogin = async (name: string): Promise<User>  => {
   const result = await httpClient.post<User>("/auth/guest", {
     name: name
   }, false);
-  Token.setToken(result.token)
-  Cookie.set(COOKIES.authToken, result.token);
+
+  auth.setToken(result.token)
+  
   return result;
 };
 
 export const isAuthenticated = () => {
-  const token = Cookie.get(COOKIES.authToken);
-  Token.setToken(token) 
-  return !!token && token != ''
+  return !!auth.getToken && auth.getToken() != ''
 }
 
-export class Token {
-  static token: string;
-  constructor() {
-  }
-
-  static getToken() {
-    return this.token;
-  }
-
-  static setToken(newToken: string) {
-    this.token = newToken;
-  }
+export const getToken = () => {
+  return auth.getToken();
 }
 

@@ -1,5 +1,5 @@
 import fetch from "isomorphic-unfetch";
-import {Token} from "./auth";
+import {getToken} from "./auth";
 
 export interface ApiRequestParams {
   method: "get" | "post";
@@ -17,7 +17,7 @@ const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
   };
 
   if (isAuthenticated) {
-    const token = Token.getToken();
+    const token = getToken();
     headers["Authorization"] = `Bearer ${token}`;
   }
 
@@ -67,6 +67,7 @@ export const httpClient = {
     });
   },
   async post<T>(url, params?, isAuthenticated?): Promise<T> {
+    console.log({url, params})
     return callApi({
       method: "post",
       url,

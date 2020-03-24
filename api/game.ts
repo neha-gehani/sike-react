@@ -20,7 +20,7 @@ export const startGame = async (gameId): Promise<Game> => {
 };
 
 export const getGame = async (gameId): Promise<Game> => {
-  const result = await httpClient.get<Game>(`/game/${gameId}`, {}, TOKEN);
+  const result = await httpClient.get<Game>(`/game/${gameId}`, {});
 
   return result;
 };
