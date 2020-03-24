@@ -12,20 +12,25 @@ import { LayoutPageProps } from "../_app";
 import GameNotStarted from "../../components/game/GameNotStarted";
 import GameQuestion from "../../components/game/GameQuestion";
 import GameCode from "../../components/game/GameCode";
-import { isGameStarted } from "../../helpers/game";
+import { useSelector, useDispatch } from "react-redux";
+import { InitialState } from "../../store";
+import { updateGameStore } from "../../states/game/actions";
 import { useRouter } from "next/router";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { updateGame } from "../../states/game/actions";
+import { updateUserStore } from "../../states/user/actions";
 
 interface GamePageProps extends LayoutPageProps {
   gameId: string;
 }
 
+interface StateProps {
+  game: Game;
+  user: User;
+}
+
 const Lobby = props => {
   return (
     <>
-      <GameCode game={props.game} />
+      <GameCode />
       <GameNotStarted
         onClickStart={props.startNewGame}
         game={props.game}
@@ -43,10 +48,28 @@ const Questions = ({ game, user, updateGame }) => {
   );
 };
 
-const GamePage: NextPage<GamePageProps> = ({ gameId }) => {
-  //todo: neha remove this with store integration
-  const [game, setGame] = useState<Game>(undefined);
-  const [user, setUser] = useState<User>(undefined);
+const GamePage: NextPage<GamePageProps> = () => {
+  const { game, user } = useSelector<InitialState, StateProps>(
+    (state: InitialState) => {
+      return {
+        game: state.game,
+        user: state.user
+      };
+    }
+  );
+
+  const router = useRouter();
+  const { gameId } = router.query;
+
+  const dispatch = useDispatch();
+
+  const setGame = gameData => {
+    dispatch(updateGameStore(gameData));
+  };
+
+  const setUser = userData => {
+    dispatch(updateUserStore(userData));
+  };
 
   const fetchGame = async () => {
     const gameData = await getGame(gameId);
@@ -61,21 +84,20 @@ const GamePage: NextPage<GamePageProps> = ({ gameId }) => {
   useEffect(() => {
     fetchGame();
     fetchUser();
-  });
+  }, [gameId]);
 
   // keep polling game data
   useRecursiveTimeout(async () => {
-    const updatedGame = await getGame(game.identifier);
-    setGame(updatedGame);
+    fetchGame();
   }, 10 * 1000);
 
   const startNewGame = async () => {
-    const gameDetails = await startGame(game.identifier);
+    const gameDetails = await startGame(gameId);
     setGame(gameDetails);
   };
 
   const updateGame = async () => {
-    const updatedGame = await getGame(game.identifier);
+    const updatedGame = await getGame(gameId);
     setGame(updatedGame);
   };
 
@@ -98,28 +120,22 @@ const GamePage: NextPage<GamePageProps> = ({ gameId }) => {
     <div className="bg-dark page">
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">
-          {game && <Col>{getGameByStatus()}</Col>}
-          {!game && <p>Loading...</p>}
+          {game.identifier && user.id ? (
+            <Col>{getGameByStatus()}</Col>
+          ) : (
+            <p>Loading...</p>
+          )}
         </Row>
       </Container>
     </div>
   );
 };
 
-const mapStateToProps = state => ({
-  game: state.game
-});
-
-const mapDispatchToProps = dispatch => ({
-  updateGame: bindActionCreators(updateGame, dispatch)
-});
-
 GamePage.getInitialProps = async (context: NextPageContext) => {
   const params = context.query as any;
-
   return {
     gameId: params.gameId
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(GamePage);
+export default GamePage;

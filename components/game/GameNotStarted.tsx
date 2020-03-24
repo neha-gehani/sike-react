@@ -9,6 +9,7 @@ interface GameProps {
 }
 
 const GameNotStarted: React.FC<GameProps> = ({ onClickStart, game, user }) => {
+  console.log("game not started", game);
   return (
     <>
       <h3 className="mb-4">Waiting for participants...</h3>
