@@ -10,14 +10,13 @@ import { LayoutPageProps } from "./_app";
 
 const Home: NextPage<LayoutPageProps> = () => {
   const [name, setName] = useState("");
-  const [gameCode, setGameCode] = useState("");
   const [user, setUser] = useState<User>({ id: -1, token: "", role: "" });
 
   const newGame = async () => {
     console.log("Start a new game");
     if (name) {
       const gameDetails = await createGame();
-      setGameCode(gameDetails.identifier);
+      Router.push(`/game/${gameDetails.identifier}`);
     } else {
       console.log(name);
       console.log("we can't do shit");
@@ -45,34 +44,25 @@ const Home: NextPage<LayoutPageProps> = () => {
             <div className="h-100 d-flex flex-column justify-content-start align-items-center">
               {user && user.id !== -1 ? (
                 <div className="text-light w-100 text-center">
-                  {gameCode ? (
-                    <>
-                      <p className="text-center">Ask your friends to join:</p>
-                      <h3 className="text-primary text-bold">{gameCode}</h3>
-                    </>
-                  ) : (
-                    <>
-                      <h2>Hello, {name}!</h2>
-                      <div className="submit w-100 mb-3">
-                        <Button
-                          variant="primary"
-                          onClick={() => joinGame()}
-                          className="w-100"
-                        >
-                          Join Game
-                        </Button>
-                      </div>
-                      <div className="submit w-100 mb-3">
-                        <Button
-                          variant="primary"
-                          onClick={() => newGame()}
-                          className="w-100 mb-4"
-                        >
-                          Start New Game
-                        </Button>
-                      </div>
-                    </>
-                  )}
+                  <h2>Hello, {name}!</h2>
+                  <div className="submit w-100 mb-3">
+                    <Button
+                      variant="primary"
+                      onClick={() => joinGame()}
+                      className="w-100"
+                    >
+                      Join Game
+                    </Button>
+                  </div>
+                  <div className="submit w-100 mb-3">
+                    <Button
+                      variant="primary"
+                      onClick={() => newGame()}
+                      className="w-100 mb-4"
+                    >
+                      Start New Game
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <TextForm
