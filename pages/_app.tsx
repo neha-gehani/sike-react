@@ -6,9 +6,12 @@ import Router from "next/router";
 import withRedux from "next-redux-wrapper";
 import { store } from "../store";
 import { Provider } from "react-redux";
+import AuthenticatedRoute from "../components/global/AuthenticatedRoute";
+import { useEffect } from "react";
 
 export interface LayoutPageProps {
   className?: string;
+  isAuthenticatedRoute?: boolean;
 }
 
 interface IProps {
@@ -18,10 +21,13 @@ interface IProps {
 }
 
 function App({ Component, pageProps, store }: IProps) {
-  if (!isAuthenticated()) {
-    // TODO: change to /login and uncomment after splitting the page
-    // Router.push('/');
-  }
+  const isLoggedIn = isAuthenticated();
+  useEffect(() => {
+    console.log("adsdad");
+    if (!isLoggedIn) {
+      Router.push("/login");
+    }
+  }, [isLoggedIn]);
   return (
     <Provider store={store}>
       <div className="h-100">

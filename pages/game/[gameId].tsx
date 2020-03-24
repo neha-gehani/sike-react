@@ -18,10 +18,6 @@ import { updateGameStore } from "../../states/game/actions";
 import { useRouter } from "next/router";
 import { updateUserStore } from "../../states/user/actions";
 
-interface GamePageProps extends LayoutPageProps {
-  gameId: string;
-}
-
 interface StateProps {
   game: Game;
   user: User;
@@ -44,7 +40,7 @@ const Questions = ({ game, user, updateGame }) => {
   );
 };
 
-const GamePage: NextPage<GamePageProps> = () => {
+const GamePage: NextPage<LayoutPageProps> = () => {
   const { game, user } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -128,10 +124,7 @@ const GamePage: NextPage<GamePageProps> = () => {
 };
 
 GamePage.getInitialProps = async (context: NextPageContext) => {
-  const params = context.query as any;
-  return {
-    gameId: params.gameId
-  };
+  return {};
 };
 
 export default GamePage;
