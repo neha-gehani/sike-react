@@ -1,63 +1,75 @@
-const callApi = async requestParams => {
- const { method, url, data } = requestParams;
+import fetch from "isomorphic-unfetch";
 
- const options = {
-   method,
-   headers: {
-     "Content-Type": "application/json",
-     Authorization: `Bearer <token>`
-   }
- };
+export interface ApiRequestParams {
+  method: "get" | "post";
+  url: string;
+  data?: Record<string, any>;
+  token?: string;
+  headers?: Record<string, string>;
+}
 
- let finalUrl = `http://sike-api.herokuapp.com${url}`;
- if (method === "get") {
-   const queryParams = new URLSearchParams(data);
-   finalUrl = `${url}?${queryParams}`;
- } else {
-   options["body"] = JSON.stringify(data);
- }
+const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
+  const { method, url, data, token } = requestParams;
 
- let response;
- let responseBody;
+  let headers = {
+    "Content-Type": "application/json"
+  };
 
- try {
-   response = await fetch(finalUrl, options);
- } catch (err) {
-   console.log(err);
- }
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
 
- try {
-   responseBody = await response.json().then(data => data);
- } catch (err) {
-   console.log(err);
-   // throw new ApiError(requestParams, {
-   //   status: response.status,
-   //   message: `Error while parsing API response: ${err.message}`,
-   //   code: "INVALID_RESPONSE",
-   //   data: null
-   // });
- }
+  const options = {
+    method,
+    headers: headers
+  };
 
- if (response.status >= 200 && response.status < 300) {
-   return responseBody;
- }
+  let finalUrl = `http://sike-api.herokuapp.com${url}`;
+  if (method === "get") {
+    const queryParams = new URLSearchParams(data);
+    finalUrl = `${finalUrl}?${queryParams}`;
+  } else {
+    options["body"] = JSON.stringify(data);
+  }
 
- console.log("ERROR");
+  let response;
+  let responseBody;
+
+  try {
+    response = await fetch(finalUrl, options);
+  } catch (err) {
+    console.log(err);
+  }
+
+  try {
+    responseBody = await response.json().then(data => data);
+  } catch (err) {
+    console.log(err);
+  }
+
+  if (response && response.status >= 200 && response.status < 300) {
+    console.log(responseBody);
+    return responseBody;
+  }
+
+  console.log("ERROR");
 };
 
 export const httpClient = {
- async get(url, params?) {
-   return callApi({
-     method: "get",
-     url,
-     data: params
-   });
- },
- async post(url, params?) {
-   return callApi({
-     method: "post",
-     url,
-     data: params
-   });
- }
+  async get<T>(url, params?, token?): Promise<T> {
+    return callApi({
+      method: "get",
+      url,
+      data: params,
+      token: token
+    });
+  },
+  async post<T>(url, params?, token?): Promise<T> {
+    return callApi({
+      method: "post",
+      url,
+      data: params,
+      token: token
+    });
+  }
 };
