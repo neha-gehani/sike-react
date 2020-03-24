@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NextPage, NextPageContext } from "next";
+import { NextPage } from "next";
 import Router from "next/router";
 
 import { joinGame } from "../../api/game";
