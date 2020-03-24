@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NextPage, NextPageContext } from "next";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Game, User } from "../../api/interface";
-import { getGame, joinGame, startGame } from "../../api/game";
+import { getGame, startGame } from "../../api/game";
 import { LayoutPageProps } from "../_app";
 import { getUser } from "../../api/user";
 import GameNotStarted from "../../components/game/GameNotStarted";
