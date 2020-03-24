@@ -16,11 +16,10 @@ interface IProps {
 }
 
 function App({ Component, pageProps }: IProps) {
-  
   if(!isAuthenticated()){
-    Router.push('/');
+    // TODO: change to /login and uncomment after splitting the page
+    // Router.push('/');
   }
-
   return (
     <div className="h-100">
       <Header />
@@ -28,5 +27,6 @@ function App({ Component, pageProps }: IProps) {
     </div>
   );
 }
+
 
 export default App;
