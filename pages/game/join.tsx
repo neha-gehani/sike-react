@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { NextPage } from "next";
+import Router from "next/router";
+
+import { joinGame } from "../../api/game";
+import { LayoutPageProps } from "../_app";
+
 import { Container, Row, Col, Button } from "react-bootstrap";
 import TextForm from "../../components/global/TextForm";
-import { joinGame } from "../../api/game";
-import Router from "next/router";
-import { LayoutPageProps } from "../_app";
+
 
 const JoinGame: NextPage<LayoutPageProps> = () => {
   const [code, setCode] = useState("");

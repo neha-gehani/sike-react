@@ -2,7 +2,9 @@ import "../assets/styles/index.scss";
 import React from "react";
 import { AppProps } from "next/app";
 import Header from "../components/global/Header";
+import {isAuthenticated} from "../api/auth";
 import { NextPage } from "next";
+import Router from "next/router";
 
 export interface LayoutPageProps {
   className?: string;
@@ -14,6 +16,10 @@ interface IProps {
 }
 
 function App({ Component, pageProps }: IProps) {
+  if(!isAuthenticated()){
+    // TODO: change to /login and uncomment after splitting the page
+    // Router.push('/');
+  }
   return (
     <div className="h-100">
       <Header />
@@ -21,5 +27,6 @@ function App({ Component, pageProps }: IProps) {
     </div>
   );
 }
+
 
 export default App;

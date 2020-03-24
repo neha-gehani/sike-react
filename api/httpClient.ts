@@ -1,21 +1,23 @@
 import fetch from "isomorphic-unfetch";
+import {getToken} from "./auth";
 
 export interface ApiRequestParams {
   method: "get" | "post";
   url: string;
   data?: Record<string, any>;
-  token?: string;
+  isAuthenticated?: boolean;
   headers?: Record<string, string>;
 }
 
 const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
-  const { method, url, data, token } = requestParams;
+  const { method, url, data, isAuthenticated = true } = requestParams;
 
   let headers = {
     "Content-Type": "application/json"
   };
 
-  if (token) {
+  if (isAuthenticated) {
+    const token = getToken();
     headers["Authorization"] = `Bearer ${token}`;
   }
 
@@ -48,7 +50,7 @@ const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
   }
 
   if (response && response.status >= 200 && response.status < 300) {
-    console.log(responseBody);
+    // console.log(responseBody);
     return responseBody;
   }
 
@@ -56,20 +58,21 @@ const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
 };
 
 export const httpClient = {
-  async get<T>(url, params?, token?): Promise<T> {
+  async get<T>(url, params?, isAuthenticated?): Promise<T> {
     return callApi({
       method: "get",
       url,
       data: params,
-      token: token
+      isAuthenticated
     });
   },
-  async post<T>(url, params?, token?): Promise<T> {
+  async post<T>(url, params?, isAuthenticated?): Promise<T> {
+    console.log({url, params})
     return callApi({
       method: "post",
       url,
       data: params,
-      token: token
+      isAuthenticated
     });
   }
 };
