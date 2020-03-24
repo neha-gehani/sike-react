@@ -51,7 +51,7 @@ const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
   useRecursiveTimeout(async () => {
     const game = await getGame(gameData.identifier)
     setGame(game);
-}, 5000);
+  }, 10 * 1000);
 
   const startNewGame = async () => {
     const gameDetails = await startGame(gameData.identifier);
