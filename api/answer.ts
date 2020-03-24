@@ -1,6 +1,6 @@
 import { httpClient } from "./httpClient";
 
-export const sendAnswer = async (answerId) => {
+export const voteForAnswer = async (answerId) => {
   const result = await httpClient.post(`/answer/${answerId}/vote`);
 
   return result;
