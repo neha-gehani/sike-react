@@ -16,7 +16,7 @@ export const guestLogin = async (name: string): Promise<User> => {
 
 export const isAuthenticated = () => {
   const token = Cookie.get(COOKIES.authToken);
-  if(!!token) {
+  if(token === '') {
     Router.push("/");
   }
   Token.setToken(token) 
