@@ -48,7 +48,7 @@ const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
   }
 
   if (response && response.status >= 200 && response.status < 300) {
-    console.log(responseBody);
+    // console.log(responseBody);
     return responseBody;
   }
 

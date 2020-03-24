@@ -2,8 +2,8 @@ import { httpClient } from "./httpClient";
 import { TOKEN } from "../helpers/constants";
 import { Game } from "./interface";
 
-export const createGame = async (): Promise<Game> => {
-  const result = await httpClient.post<Game>("/game", {}, TOKEN);
+export const createGame = async (user): Promise<Game> => {
+  const result = await httpClient.post<Game>("/game", {}, user.token);
 
   return result;
 };
@@ -14,8 +14,8 @@ export const joinGame = async (gameId): Promise<Game> => {
   return result;
 };
 
-export const startGame = async (gameId): Promise<Game> => {
-  const result = await httpClient.post<Game>(`/game/${gameId}/start`);
+export const startGame = async (gameId, user): Promise<Game> => {
+  const result = await httpClient.post<Game>(`/game/${gameId}/start`, {}, user.token);
 
   return result;
 };

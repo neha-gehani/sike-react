@@ -16,7 +16,7 @@ const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
   const [game, setGame] = useState(gameData);
 
   const setGameStart = async () => {
-    const gameDetails = await startGame(game.id);
+    const gameDetails = await startGame(game.id, user);
     setGame(gameDetails);
   };
 
