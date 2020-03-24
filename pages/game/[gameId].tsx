@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { NextPage, NextPageContext } from "next";
 import { Container, Row, Col, Button } from "react-bootstrap";
+
 import { Game, User } from "../../api/interface";
-import { getGame, startGame } from "../../api/game";
-import { LayoutPageProps } from "../_app";
 import { getUser } from "../../api/user";
+import { getGame, startGame } from "../../api/game";
+
+import useRecursiveTimeout from "../../helpers/customHook";
+
+import { LayoutPageProps } from "../_app";
 import GameNotStarted from "../../components/game/GameNotStarted";
 import GameQuestion from "../../components/game/GameQuestion";
 import GameCode from "../../components/game/GameCode";
@@ -43,6 +47,12 @@ const Questions = ({game, user, updateGame}) => {
 const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
   const [game, setGame] = useState(gameData);
 
+  // keep polling game data
+  useRecursiveTimeout(async () => {
+    const game = await getGame(gameData.identifier)
+    setGame(game);
+}, 5000);
+
   const startNewGame = async () => {
     const gameDetails = await startGame(gameData.identifier);
     setGame(gameDetails);
@@ -69,12 +79,6 @@ const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
         
     }
   }
-
-  // // keep polling game data
-  // const gamePolling = setTimeout(async () => {
-  //   const game = await getGame(gameId)
-  //   setGame(game);
-  // }, 5000);
 
   return (
     <div className="bg-dark page">
