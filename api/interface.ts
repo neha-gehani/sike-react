@@ -13,18 +13,23 @@ export interface Participant {
 export interface Answer {
   id: number;
   answerStr: string;
-  user?: User
+  user?: User;
+  vote?: Vote[]
+}
+
+export interface Vote {
+  id: string,
+  name: string
 }
 
 export interface Question {
   id: number;
   questionStr: string;
   status: string;
-  answer?: Answer[]
+  answer?: Answer[];
 }
 
 export interface Game {
-  [x: string]: any;
   identifier: string;
   user: User;
   id: number;
