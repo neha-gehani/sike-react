@@ -1,5 +1,4 @@
 import { httpClient } from "./httpClient";
-import { TOKEN } from "../helpers/constants";
 import { Game } from "./interface";
 
 export const createGame = async (): Promise<Game> => {
