@@ -18,7 +18,6 @@ interface GamePageProps extends LayoutPageProps {
 const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
   const [game, setGame] = useState(gameData);
   const hasGameStarted = isGameStarted(game.status);
-  console.log(hasGameStarted);
 
   const setGameStart = async () => {
     const gameDetails = await startGame(game.id);
