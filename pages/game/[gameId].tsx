@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NextPage, NextPageContext } from "next";
 import { Container, Row, Col, Button } from "react-bootstrap";
 
@@ -19,8 +19,7 @@ import { bindActionCreators } from "redux";
 import { updateGame } from "../../states/game/actions";
 
 interface GamePageProps extends LayoutPageProps {
-  gameData: Game;
-  user: User;
+  gameId: string;
 }
 
 const Lobby = props => {
@@ -44,23 +43,40 @@ const Questions = ({ game, user, updateGame }) => {
   );
 };
 
-const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
-  const [game, setGame] = useState(gameData);
+const GamePage: NextPage<GamePageProps> = ({ gameId }) => {
+  //todo: neha remove this with store integration
+  const [game, setGame] = useState<Game>(undefined);
+  const [user, setUser] = useState<User>(undefined);
+
+  const fetchGame = async () => {
+    const gameData = await getGame(gameId);
+    setGame(gameData);
+  };
+
+  const fetchUser = async () => {
+    const userData = await getUser();
+    setUser(userData);
+  };
+
+  useEffect(() => {
+    fetchGame();
+    fetchUser();
+  });
 
   // keep polling game data
   useRecursiveTimeout(async () => {
-    const game = await getGame(gameData.identifier);
-    setGame(game);
+    const updatedGame = await getGame(game.identifier);
+    setGame(updatedGame);
   }, 10 * 1000);
 
   const startNewGame = async () => {
-    const gameDetails = await startGame(gameData.identifier);
+    const gameDetails = await startGame(game.identifier);
     setGame(gameDetails);
   };
 
   const updateGame = async () => {
-    const game = await getGame(gameData.identifier);
-    setGame(game);
+    const updatedGame = await getGame(game.identifier);
+    setGame(updatedGame);
   };
 
   const getGameByStatus = () => {
@@ -82,7 +98,8 @@ const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
     <div className="bg-dark page">
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">
-          <Col>{getGameByStatus()}</Col>
+          {game && <Col>{getGameByStatus()}</Col>}
+          {!game && <p>Loading...</p>}
         </Row>
       </Container>
     </div>
@@ -99,12 +116,9 @@ const mapDispatchToProps = dispatch => ({
 
 GamePage.getInitialProps = async (context: NextPageContext) => {
   const params = context.query as any;
-  const gameData = await getGame(params.gameId);
-  const user = await getUser();
 
   return {
-    gameData,
-    user
+    gameId: params.gameId
   };
 };
 
