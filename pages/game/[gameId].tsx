@@ -10,7 +10,6 @@ import GameQuestion from "../../components/game/GameQuestion";
 import GameCode from "../../components/game/GameCode";
 
 interface GamePageProps extends LayoutPageProps {
-  gameId: String;
   gameData: Game;
   user: User;
 }
@@ -41,16 +40,16 @@ const Questions = ({game, user, updateGame}) => {
   )
 }
 
-const GamePage: NextPage<GamePageProps> = ({ gameId, gameData, user }) => {
+const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
   const [game, setGame] = useState(gameData);
 
   const startNewGame = async () => {
-    const gameDetails = await startGame(gameId);
+    const gameDetails = await startGame(gameData.identifier);
     setGame(gameDetails);
   };
 
   const updateGame = async () => {
-    const game = await getGame(gameId)
+    const game = await getGame(gameData.identifier)
     setGame(game);
   };
 
@@ -92,12 +91,10 @@ const GamePage: NextPage<GamePageProps> = ({ gameId, gameData, user }) => {
 
 GamePage.getInitialProps = async (context: NextPageContext) => {
   const params = context.query as any;
-  const gameId = params.gameId;
-  const gameData = await getGame(gameId);
+  const gameData = await getGame(params.gameId);
   const user = await getUser();
 
   return {
-    gameId,
     gameData,
     user
   };
