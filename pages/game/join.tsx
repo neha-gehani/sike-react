@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { NextPage, NextPageContext } from "next";
 import Router from "next/router";
 
-import {isAuthenticated} from "../../api/auth";
 import { joinGame } from "../../api/game";
 import { LayoutPageProps } from "../_app";
 
@@ -11,7 +10,6 @@ import TextForm from "../../components/global/TextForm";
 
 
 const JoinGame: NextPage<LayoutPageProps> = () => {
-  isAuthenticated();
   const [code, setCode] = useState("");
 
   const join = async () => {

@@ -1,5 +1,4 @@
 import { httpClient } from "./httpClient";
-import Router from "next/router";
 import Cookie from "js-cookie";
 import { User } from "./interface";
 import { COOKIES } from "../helpers/constants";
@@ -17,11 +16,11 @@ export const guestLogin = async (name: string): Promise<User> => {
 export const isAuthenticated = () => {
   const token = Cookie.get(COOKIES.authToken);
   if(token === '') {
-    Router.push("/");
+    return false;
   }
   Token.setToken(token) 
+  return true;
 }
-
 
 export class Token {
   static token: string;
