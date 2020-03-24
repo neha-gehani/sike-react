@@ -18,8 +18,8 @@ export interface Answer {
 }
 
 export interface Vote {
-  id: string,
-  name: string
+  id: string;
+  name: string;
 }
 
 export interface Question {
