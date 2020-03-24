@@ -9,6 +9,9 @@ import GameNotStarted from "../../components/game/GameNotStarted";
 import GameCode from "../../components/game/GameCode";
 import { isGameStarted } from "../../helpers/game";
 import { useRouter } from "next/router";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { updateGame } from "../../states/game/actions";
 
 interface GamePageProps extends LayoutPageProps {
   gameData: Game;
@@ -46,6 +49,14 @@ const GamePage: NextPage<GamePageProps> = ({ gameData, user }) => {
   );
 };
 
+const mapStateToProps = state => ({
+  game: state.game
+});
+
+const mapDispatchToProps = dispatch => ({
+  updateGame: bindActionCreators(updateGame, dispatch)
+});
+
 GamePage.getInitialProps = async (context: NextPageContext) => {
   const params = context.query as any;
   const gameData = await getGame(params.gameId);
@@ -57,4 +68,4 @@ GamePage.getInitialProps = async (context: NextPageContext) => {
   };
 };
 
-export default GamePage;
+export default connect(mapStateToProps, mapDispatchToProps)(GamePage);
