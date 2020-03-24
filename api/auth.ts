@@ -8,7 +8,7 @@ import { COOKIES } from "../helpers/constants";
 export const guestLogin = async (name: string): Promise<User> => {
   const result = await httpClient.post<User>("/auth/guest", {
     name: name
-  });
+  }, false);
   Token.setToken(result.token)
   Cookie.set(COOKIES.authToken, result.token);
   return result;

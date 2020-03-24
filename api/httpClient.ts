@@ -58,18 +58,20 @@ const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
 };
 
 export const httpClient = {
-  async get<T>(url, params?, token?): Promise<T> {
+  async get<T>(url, params?, isAuthenticated?): Promise<T> {
     return callApi({
       method: "get",
       url,
-      data: params
+      data: params,
+      isAuthenticated
     });
   },
-  async post<T>(url, params?): Promise<T> {
+  async post<T>(url, params?, isAuthenticated?): Promise<T> {
     return callApi({
       method: "post",
       url,
-      data: params
+      data: params,
+      isAuthenticated
     });
   }
 };

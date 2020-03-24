@@ -16,7 +16,7 @@ const Home: NextPage<LayoutPageProps> = () => {
   const newGame = async () => {
     console.log("Start a new game");
     if (name) {
-      const gameDetails = await createGame(user);
+      const gameDetails = await createGame();
       setGameCode(gameDetails.identifier);
     } else {
       console.log(name);
