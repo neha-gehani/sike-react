@@ -1,6 +1,6 @@
 import React, { useState, MouseEvent } from "react";
 import { Button } from "react-bootstrap";
-import { Game, User, Question } from "../../api/interface";
+import { Game, User, Question, Answer } from "../../api/interface";
 import { sendAnswer } from "../../api/questions";
 
 interface GameProps {
@@ -25,20 +25,35 @@ const GameQuestion: React.FC<GameProps> = ({ game, user, onQuestionAnswered }) =
     onQuestionAnswered()
   }
 
+  const getQuestionState = () => {
+    if(currentQuestion.status === 'answering') {
+      return (<>
+        <h3 className="mb-4">{currentQuestion.questionStr}</h3>
+        <textarea 
+          className="answer"
+          onChange={e => updateAnswer(e.target.value)}
+        ></textarea>
+        <Button
+          variant="secondary"
+          onClick={submitAnswer}
+          className="w-100 my-3"
+        >Submit</Button>
+      </>)
+    }
+
+    return (<h3 className="mb-4">Let's wait till everyone else is done...</h3>)
+  }
+
   return (
     <>
-      <h3 className="mb-4">{currentQuestion.questionStr}</h3>
-      <textarea 
-        className="answer"
-        onChange={e => updateAnswer(e.target.value)}
-      ></textarea>
-      <Button
-        variant="secondary"
-        onClick={submitAnswer}
-        className="w-100 my-3"
-      >
-        Submit
-      </Button>
+      {getQuestionState()}
+      <div className='users-answered'>
+        {currentQuestion.answers.map((answer: Answer, index) => (
+          <p className="mb-3" key={index}>
+            {answer.user.name}
+          </p>
+        ))}
+      </div>
     </>
   );
 };

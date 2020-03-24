@@ -26,7 +26,7 @@ export interface Question {
   id: number;
   questionStr: string;
   status: string;
-  answer?: Answer[];
+  answers?: Answer[];
 }
 
 export interface Game {
