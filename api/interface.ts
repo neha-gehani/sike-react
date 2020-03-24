@@ -10,10 +10,30 @@ export interface Participant {
   name: string;
 }
 
+export interface Answer {
+  id: number;
+  answerStr: string;
+  user?: User;
+  vote?: Vote[]
+}
+
+export interface Vote {
+  id: string;
+  name: string;
+}
+
+export interface Question {
+  id: number;
+  questionStr: string;
+  status: string;
+  answers?: Answer[];
+}
+
 export interface Game {
   identifier: string;
   user: User;
   id: number;
   participants: Participant[];
-  status: "created" | "started";
+  questions?: Question[];
+  status: "created" | "active";
 }
