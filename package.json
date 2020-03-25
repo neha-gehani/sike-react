@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "postinstall": "npm run build",
     "dev": "next dev",
-    "build": "next build && next export",
-    "start": "next start"
+    "build": "next build",
+    "start": "next start -p $PORT"
   },
   "dependencies": {
     "@types/isomorphic-fetch": "0.0.35",
