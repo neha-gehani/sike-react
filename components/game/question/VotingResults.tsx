@@ -1,131 +1,131 @@
-import React, { useState, MouseEvent } from "react";
-import keyBy from "lodash/keyBy";
-import { Row, Col, Button } from "react-bootstrap";
-import { Game, User, Question, Answer } from "../../api/interface";
-import { sendAnswer } from "../../api/questions";
-import { voteForAnswer } from "../../api/answer";
+import React, { useState } from "react";
+import flatten from 'lodash/flatten';
+import { Row, Col, ListGroup, Badge, Button } from "react-bootstrap";
+import { Answer, Vote, User, Question } from "../../../api/interface";
+import { voteForAnswer } from "../../../api/answer";
 
-interface GameProps {
-  game: Game;
+interface VotingResultsProps {
   user: User;
-  onQuestionAnswered: () => void;
+  currentQuestion: Question;
+  // onQuestionAnswered: () => void;
 }
 
-const GameQuestion: React.FC<GameProps> = ({
-  game,
+
+const VotingResults: React.FC<VotingResultsProps> = ({
+  currentQuestion,
   user,
-  onQuestionAnswered
+  // onQuestionAnswered
 }) => {
-  const [answer, setAnswer] = useState("");
-  const currentQuestion: Question = game.questions.find(
-    question => question.status === "answering" || question.status === "voting"
-  );
 
-  console.log({ currentQuestion });
+  let selectedAnswerTemp = 0;
+  let voteStateTemp = 'default';
 
-  const updateAnswer = answer => {
-    setAnswer(answer);
-  };
+  const castVote = async (answerId) => {
+    // set an interim state while the API call happens
+    setSelectedAnswer(answerId);
+    setVoteState('answering');
 
-  const submitAnswer = e => {
-    console.log("Submit Answer");
-    sendAnswer(currentQuestion.id, answer);
-    onQuestionAnswered();
-  };
-
-  const castVote = async answerId => {
-    console.log("Submit Vote");
+    // make the API call to cast the vote
     await voteForAnswer(answerId);
-    onQuestionAnswered();
-  };
+    
+    // update the state to done
+    setVoteState('answered');
+  }
 
-  const usersWhoAnswered = () => (
-    <div className="users-answered">
-      {currentQuestion.answers.map((answer: Answer, index) => (
-        <p className="mb-3" key={index}>
-          {answer.user.name}
-        </p>
-      ))}
-    </div>
-  );
+  const getVoteState: (state: string, data: any) => void =
+    function(state, data) {
+      if(state === 'answering') {
+        return (<>
+          <Badge variant="secondary">
+            Voting
+          </Badge>
+        </>)
+      } 
+      return (<>
+          <Badge variant="success">
+            done
+          </Badge>
+        </>)
+     };
 
-  const getQuestionState = () => {
-    const answersMap = keyBy(currentQuestion.answers, "user.id", {});
-    const userHasAnswered =
-      currentQuestion.answers.length > 0 && !!answersMap[user.id];
-
-    // show the input box till the user has answered
-    if (!userHasAnswered) {
-      return (
-        <>
-          <Row>
-            <Col>
-              <h3 className="mb-4">{currentQuestion.questionStr}</h3>
-              <textarea
-                className="answer"
-                onChange={e => updateAnswer(e.target.value)}
-              ></textarea>
-              <Button
-                variant="secondary"
-                onClick={submitAnswer}
-                className="w-100 my-3"
-              >
-                Submit
-              </Button>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <h3 className="mb-4">Already done:</h3>
-              {usersWhoAnswered()}
-            </Col>
-          </Row>
-        </>
-      );
+  // Vote can have 3 states default | answering | answered
+  // This function is called only if the state is not default
+  const getVoteByState = (answer) => {
+    if(answer.id === selectedAnswer) {
+        return getVoteState(voteState, {answer, selectedAnswer});
     }
+    return (<></>);
+  }
+ 
 
-    // if the question is marked as voting, then we need to wait till all participants have answered
-    if (game.participants.length === currentQuestion.answers.length) {
-      // show voting with users who voted
-      return (
-        <>
+  // prepare a list of all the people who have voted
+  const peopleVoted = flatten(currentQuestion.answers.map((answer: Answer) => {
+    const names = answer.votes.map((vote: Vote, index) => {
+      if(vote.name === user.name) {
+        voteStateTemp = 'answered';
+        selectedAnswerTemp = answer.id;
+      }
+      return vote.name
+    })
+    return names
+  }));
+
+  const [voteState, setVoteState] = useState(voteStateTemp);
+  const [selectedAnswer, setSelectedAnswer] = useState(selectedAnswerTemp);
+
+  return (
+    <>
+      <Row className="voting-answers">
+        <Col>
           <h3 className="mb-4">Pick your favourite answer</h3>
-          <div className="users-answered">
+          <ListGroup variant="flush">
             {currentQuestion.answers.map((answer: Answer, index) => {
               if (answer.user.id === user.id) {
                 return (
-                  <p className="mb-3 non-clickable-answer" key={index}>
-                    {answer.answerStr}
-                  </p>
+                  <ListGroup.Item key={index}>
+                    {answer.answerStr} 
+                    <Badge 
+                      className="users-answer"
+                      variant="secondary"
+                      key={index}>your-answer</Badge>
+                    </ListGroup.Item>
                 );
               }
 
               return (
-                <p
-                  className="mb-3 clickable-answer"
-                  onClick={e => {
-                    castVote(answer.id);
-                  }}
-                  key={index}
-                >
+                <ListGroup.Item key={index}>
                   {answer.answerStr}
-                </p>
+                  {voteState === "default" ? (<>
+                    <Button
+                      variant="primary"
+                      className="btn-small"
+                      onClick={e => {
+                        castVote(answer.id)
+                      }}>
+                      Vote
+                    </Button>
+                  </>) :
+                  getVoteByState(answer)}
+                </ListGroup.Item>
               );
             })}
+          </ListGroup> 
+        </Col>
+      </Row>
+      <Row className="users-answered">
+        <Col>
+          <h3 className="mb-4">Already done:</h3>
+          <div className="users-answered">
+            {peopleVoted.map((name: string, index) => (
+              <p className="mb-3" key={index}>
+                {name}
+              </p>
+            ))}
           </div>
-        </>
-      );
-    }
-
-    return (
-      <>
-        <h3 className="mb-4">Let's wait till everyone else is done...</h3>
-        {usersWhoAnswered()}
-      </>
-    );
-  };
-
-  return <>{getQuestionState()}</>;
+        </Col>
+      </Row>
+    </>
+  );
 };
 
-export default GameQuestion;
+export default VotingResults;
