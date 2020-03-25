@@ -3,24 +3,25 @@ import { Row, Col, Button } from "react-bootstrap";
 import { Answer, Game, User, Question } from "../../../api/interface";
 import { sendAnswer } from "../../../api/questions";
 import { voteForAnswer } from "../../../api/answer";
+import ButtonWithLoader from "../../global/ButtonWithLoader";
 
 interface NotAnsweredProps {
   user: User;
   currentQuestion: Question;
-  // onQuestionAnswered: () => void;
 }
 
 const NotAnswered: React.FC<NotAnsweredProps> = ({
   currentQuestion,
   user,
-  // onQuestionAnswered
 }) => {
 
   const [answer, setAnswer] = useState("");
+  const [answerSavingStatus, setanswerSavingStatus] = useState(false);
+
   const submitAnswer = e => {
     console.log("Submit Answer");
+    setanswerSavingStatus(true);
     sendAnswer(currentQuestion.id, answer);
-    // onQuestionAnswered();
   };
  
   return (<>
@@ -31,13 +32,13 @@ const NotAnswered: React.FC<NotAnsweredProps> = ({
           className="answer"
           onChange={e => setAnswer(e.target.value)}
         ></textarea>
-        <Button
-          variant="primary"
+        <ButtonWithLoader
+          buttonVariant="primary"
+          buttonText="Submit"
           onClick={submitAnswer}
           className="w-100 my-3"
-        >
-          Submit
-        </Button>
+          isLoading={answerSavingStatus}
+        />
       </Col>
     </Row>
     <Row className="not-answered-users-completed">
