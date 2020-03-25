@@ -11,13 +11,14 @@ import { getUser } from "../api/user";
 import { useSelector, useDispatch } from "react-redux";
 import { InitialState } from "../store";
 import { updateUserStore } from "../states/user/actions";
+import ButtonWithLoader from "../components/global/ButtonWithLoader";
 
 interface StateProps {
   user: User;
 }
 
 const Home: NextPage<LayoutPageProps> = props => {
-  // const [user, setUser] = useState<User>({ id: -1, token: "", role: "" });
+  const [isCreatingGame, setIsCreatingGame] = useState(false);
   const { user } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -44,8 +45,9 @@ const Home: NextPage<LayoutPageProps> = props => {
   }, [hasFetchedUser]);
 
   const newGame = async () => {
-    console.log("Start a new game");
+    setIsCreatingGame(true);
     const gameDetails = await createGame();
+    setIsCreatingGame(false);
     Router.push(`/game/${gameDetails.identifier}`);
   };
 
@@ -72,13 +74,13 @@ const Home: NextPage<LayoutPageProps> = props => {
                     </Button>
                   </div>
                   <div className="submit w-100 mb-3">
-                    <Button
-                      variant="primary"
+                    <ButtonWithLoader
+                      buttonVariant="primary"
+                      buttonText="Start New Game"
                       onClick={() => newGame()}
                       className="w-100 mb-4"
-                    >
-                      Start New Game
-                    </Button>
+                      isLoading={isCreatingGame}
+                    />
                   </div>
                 </div>
               ) : (
