@@ -15,8 +15,9 @@ import GameCode from "../../components/game/GameCode";
 import { useSelector, useDispatch } from "react-redux";
 import { InitialState } from "../../store";
 import { updateGameStore } from "../../states/game/actions";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import { updateUserStore } from "../../states/user/actions";
+import GameScores from "../../components/game/GameScores";
 
 interface StateProps {
   game: Game;
@@ -36,6 +37,14 @@ const Questions = ({ game, user, updateGame }) => {
   return (
     <>
       <GameQuestion onQuestionAnswered={updateGame} game={game} user={user} />
+    </>
+  );
+};
+
+const Scores = ({ redirectToHome }) => {
+  return (
+    <>
+      <GameScores onClickStart={redirectToHome} />
     </>
   );
 };
@@ -93,6 +102,10 @@ const GamePage: NextPage<LayoutPageProps> = () => {
     setGame(updatedGame);
   };
 
+  const redirectToHome = () => {
+    Router.replace("/");
+  };
+
   const getGameByStatus = () => {
     const props = {
       game,
@@ -103,6 +116,8 @@ const GamePage: NextPage<LayoutPageProps> = () => {
         return Lobby({ ...props, startNewGame });
       case "active":
         return Questions({ ...props, updateGame });
+      case "finished":
+        return Scores({ redirectToHome });
       default:
         return;
     }
@@ -121,10 +136,6 @@ const GamePage: NextPage<LayoutPageProps> = () => {
       </Container>
     </div>
   );
-};
-
-GamePage.getInitialProps = async (context: NextPageContext) => {
-  return {};
 };
 
 export default GamePage;
