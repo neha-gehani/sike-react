@@ -18,6 +18,7 @@ import { updateGameStore } from "../../states/game/actions";
 import Router, { useRouter } from "next/router";
 import { updateUserStore } from "../../states/user/actions";
 import GameScores from "../../components/game/GameScores";
+import FullPageLoader from "../../components/global/FullPageLoader";
 
 interface StateProps {
   game: Game;
@@ -28,7 +29,10 @@ const Lobby = props => {
   return (
     <>
       <GameCode />
-      <GameNotStarted onClickStart={props.startNewGame} />
+      <GameNotStarted
+        onClickStart={props.startNewGame}
+        isStarting={props.isStartingGame}
+      />
     </>
   );
 };
@@ -50,6 +54,7 @@ const Scores = ({ redirectToHome }) => {
 };
 
 const GamePage: NextPage<LayoutPageProps> = () => {
+  const [isStartingGame, setIsStartingGame] = useState(false);
   const { game, user } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -93,7 +98,9 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   }, 10 * 1000);
 
   const startNewGame = async () => {
+    setIsStartingGame(true);
     const gameDetails = await startGame(gameId);
+    setIsStartingGame(false);
     setGame(gameDetails);
   };
 
@@ -113,7 +120,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
     };
     switch (game.status) {
       case "created":
-        return Lobby({ ...props, startNewGame });
+        return Lobby({ ...props, startNewGame, isStartingGame });
       case "active":
         return Questions({ ...props, updateGame });
       case "finished":
@@ -130,7 +137,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
           {game.identifier && user.id ? (
             <Col>{getGameByStatus()}</Col>
           ) : (
-            <p>Loading...</p>
+            <FullPageLoader />
           )}
         </Row>
       </Container>
