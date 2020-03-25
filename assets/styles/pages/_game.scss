@@ -3,6 +3,16 @@
   height: 150px;
 }
 
+
+// voting
+
+.voting-answers {
+  .list-group-item {
+    background-color: transparent;
+  }
+}
+
+
 .clickable-answer {
   cursor: pointer;
 }

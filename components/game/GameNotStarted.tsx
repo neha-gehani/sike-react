@@ -32,7 +32,7 @@ const GameNotStarted: React.FC<GameProps> = ({ onClickStart }) => {
       ))}
       {userId === game.user.id ? (
         <Button
-          variant="secondary"
+          variant="primary"
           onClick={onClickStart}
           className="w-100 my-3"
         >
