@@ -14,12 +14,13 @@ export interface Answer {
   id: number;
   answerStr: string;
   user?: User;
-  vote?: Vote[];
+  votes?: Vote[];
 }
 
 export interface Vote {
   id: string;
   name: string;
+  
 }
 
 export interface Question {
