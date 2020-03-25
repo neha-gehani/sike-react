@@ -50,7 +50,6 @@ const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
   }
 
   if (response && response.status >= 200 && response.status < 300) {
-    // console.log(responseBody);
     return responseBody;
   }
 
@@ -67,7 +66,6 @@ export const httpClient = {
     });
   },
   async post<T>(url, params?, isAuthenticated?): Promise<T> {
-    console.log({url, params})
     return callApi({
       method: "post",
       url,

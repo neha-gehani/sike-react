@@ -15,13 +15,6 @@ const AnsweredWaiting: React.FC<AnsweredWaitingProps> = ({
   user,
   // onQuestionAnswered
 }) => {
-
-  const [answer, setAnswer] = useState("");
-  const submitAnswer = e => {
-    console.log("Submit Answer");
-    sendAnswer(currentQuestion.id, answer);
-    // onQuestionAnswered();
-  };
  
   return (<>
     <Row className="not-answered-users-completed">
@@ -38,7 +31,7 @@ const AnsweredWaiting: React.FC<AnsweredWaitingProps> = ({
     </Row>
     
     <Badge
-      className="not-answered-badge"
+      className="floating-badge"
       variant='primary'>Lets wait for everyone else to finish</Badge>
   </>);
 };

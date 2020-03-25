@@ -17,7 +17,6 @@ const getQuestionState: (
   user: User,
   game: Game
 ) => string = function(currentQuestion, user, game) {
-  console.log(currentQuestion);
 
   if (currentQuestion.status === "voting") {
     // check if the user has answered this question
@@ -42,15 +41,12 @@ const getQuestionState: (
           return "voted-waiting";
         }
 
-        console.log("voting");
         return "voting";
       }
-      console.log("answered-waiting");
       return "answered-waiting";
     }
   }
 
-  console.log("not-answered");
   return "not-answered";
 };
 
