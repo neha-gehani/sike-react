@@ -23,7 +23,6 @@ interface IProps {
 function App({ Component, pageProps, store }: IProps) {
   const isLoggedIn = isAuthenticated();
   useEffect(() => {
-    console.log("adsdad");
     if (!isLoggedIn) {
       Router.push("/login");
     }
