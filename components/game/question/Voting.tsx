@@ -65,7 +65,7 @@ const Voting: React.FC<VotingProps> = ({
         voteStateTemp = 'answered';
         selectedAnswerTemp = answer.id;
       }
-      return vote.name
+      return vote
     })
     return names
   }));
@@ -116,9 +116,9 @@ const Voting: React.FC<VotingProps> = ({
         <Col>
           <h3 className="mb-4">Already done:</h3>
           <div className="users-answered">
-            {peopleVoted.map((name: string, index) => (
+            {peopleVoted.map((person: User, index) => (
               <p className="mb-3" key={index}>
-                {name}
+                {person.name}
               </p>
             ))}
           </div>
