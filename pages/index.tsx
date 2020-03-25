@@ -48,7 +48,7 @@ const Home: NextPage<LayoutPageProps> = props => {
     setIsCreatingGame(true);
     const gameDetails = await createGame();
     setIsCreatingGame(false);
-    Router.push(`/game/${gameDetails.identifier}`);
+    Router.push("/game/[gameId]", `/game/${gameDetails.identifier}`);
   };
 
   const joinGame = () => {
