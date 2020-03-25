@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import flatten from 'lodash/flatten';
 import differenceBy from 'lodash/differenceBy';
 import { Row, Col, ListGroup, Badge, Button } from "react-bootstrap";
 import { Answer, Vote, User, Question } from "../../../api/interface";
-import { voteForAnswer } from "../../../api/answer";
 
 interface VotingResultsProps {
   user: User;
   participants: User[];
   currentQuestion: Question;
-  // onQuestionAnswered: () => void;
 }
 
 
@@ -31,7 +29,7 @@ const VotingResults: React.FC<VotingResultsProps> = ({
   
   const userSiked = flatten(currentQuestion.answers.map((answer: Answer) => {
     return answer.votes.find((vote: Vote) => vote.id !== user.id)
-  })).filter((elem) => elem !== undefined );
+  })).filter((user) => user !== undefined );
   console.log({userSiked})
 
   return (
