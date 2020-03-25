@@ -1,5 +1,6 @@
 import React, { useState, MouseEvent } from "react";
 import { Button } from "react-bootstrap";
+import ButtonWithLoader from "./ButtonWithLoader";
 
 interface TextFormProps {
   onClick: (event: MouseEvent<HTMLButtonElement>) => void;
@@ -7,6 +8,7 @@ interface TextFormProps {
   headerText?: string;
   placeholder: string;
   buttonText: string;
+  isLoading?: boolean;
 }
 
 const TextForm: React.FC<TextFormProps> = ({
@@ -14,7 +16,8 @@ const TextForm: React.FC<TextFormProps> = ({
   onTextUpdated,
   headerText,
   placeholder,
-  buttonText
+  buttonText,
+  isLoading
 }) => {
   const [text, setText] = useState("");
 
@@ -37,9 +40,13 @@ const TextForm: React.FC<TextFormProps> = ({
         />
       </div>
       <div className="submit w-100 mb-3">
-        <Button variant="primary" onClick={onClick} className="w-100">
-          {buttonText}
-        </Button>
+        <ButtonWithLoader
+          buttonVariant="primary"
+          onClick={onClick}
+          className="w-100"
+          isLoading={isLoading}
+          buttonText={buttonText}
+        />
       </div>
     </>
   );

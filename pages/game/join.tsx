@@ -8,13 +8,15 @@ import { LayoutPageProps } from "../_app";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import TextForm from "../../components/global/TextForm";
 
-
 const JoinGame: NextPage<LayoutPageProps> = () => {
   const [code, setCode] = useState("");
+  const [isJoining, setIsJoining] = useState(false);
 
   const join = async () => {
     if (code && code.length >= 3) {
+      setIsJoining(true);
       const game = await joinGame(code);
+      setIsJoining(false);
       Router.push(`/game/${game.identifier}`);
     }
   };
@@ -30,6 +32,7 @@ const JoinGame: NextPage<LayoutPageProps> = () => {
               headerText="Join game"
               buttonText="Join now"
               placeholder="Enter the game code"
+              isLoading={isJoining}
             />
           </Col>
         </Row>
