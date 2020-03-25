@@ -7,7 +7,12 @@ interface LoaderProps {
   className?: string;
   onClick: (event: MouseEvent<HTMLButtonElement>) => void;
   buttonText: string;
-  buttonVariant: "primary" | "secondary" | "success" | "danger";
+  buttonVariant:
+    | "primary"
+    | "secondary"
+    | "success"
+    | "danger"
+    | "outline-primary";
   isLoading?: boolean;
   isDisabled?: boolean;
 }
@@ -31,7 +36,16 @@ const ButtonWithLoader: React.FC<LoaderProps> = ({
         ])}
         disabled={isLoading || isDisabled}
       >
-        {isLoading ? <InlineLoader isDark={true} /> : buttonText}
+        {isLoading ? (
+          <InlineLoader
+            isDark={
+              buttonVariant !== "secondary" &&
+              buttonVariant !== "outline-primary"
+            }
+          />
+        ) : (
+          buttonText
+        )}
       </Button>
     </>
   );
