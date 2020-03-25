@@ -118,7 +118,7 @@ interface GameProps {
 }
 
 const GameQuestion: React.FC<GameProps> = ({ game, user }) => {
-  const myScore = getCurrentUserScore(game.scores, game.user.id);
+  const myScore = getCurrentUserScore(game.scores, user.id);
   return (
     <>
       {getQuestionByState({

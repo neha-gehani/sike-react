@@ -5,8 +5,12 @@ body,
   height: 100%;
 }
 
+// body {
+//   background-color: $dark;
+// }
+
 .page {
-  height: calc(100% - 185px);
+  min-height: calc(100% - 185px);
 }
 
 .text-bold {

@@ -17,7 +17,7 @@ const JoinGame: NextPage<LayoutPageProps> = () => {
       setIsJoining(true);
       const game = await joinGame(code);
       setIsJoining(false);
-      Router.push(`/game/${game.identifier}`);
+      Router.push("/game/[gameId]", `/game/${game.identifier}`);
     }
   };
 
