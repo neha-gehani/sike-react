@@ -18,7 +18,7 @@ export interface Answer {
 }
 
 export interface Vote {
-  id: string;
+  id: number;
   name: string;
   
 }

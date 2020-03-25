@@ -19,11 +19,28 @@
     background-color: transparent;
     display: flex;
     justify-content: space-between;
+    padding-left: 0;
   }
 
   .badge {
     display: flex;
     align-self: center;
+  }
+}
+
+// Voting results
+
+.user-siked-by {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.user-siked {
+  margin-bottom: 4rem;
+
+  .list-group-item {
+    background-color: transparent;
+    padding-left: 0;
   }
 }
 

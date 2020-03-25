@@ -1,6 +1,7 @@
 import React, { useState, MouseEvent } from "react";
 import keyBy from "lodash/keyBy";
-import { Game, User, Question, Answer } from "../../api/interface";
+import flatten from "lodash/flatten";
+import { Game, User, Question, Answer, Vote } from "../../api/interface";
 import { sendAnswer } from "../../api/questions";
 import { voteForAnswer } from "../../api/answer";
 
@@ -33,7 +34,14 @@ const getQuestionState: (
       if (currentQuestion.answers.length === game.participants.length) {
         // voting has started
         // check if the current user has voted for any answer
-        // if(currentQuestion.)
+        const userVoted = currentQuestion.answers.find((answer: Answer) => {
+          return answer.votes.find((vote: Vote) => vote.id === user.id)
+        });
+
+        if(!!userVoted) {
+          return "voted-waiting";
+        }
+
         console.log("voting");
         return "voting";
       }
@@ -73,13 +81,16 @@ const VotingTemplate = ({ currentQuestion, user }) => {
   );
 };
 
-// const VotingResultsTemplate = () => {
-//   return (
-//     <>
-//       <VotingResults></VotingResults>
-//     </>
-//   )
-// }
+const VotingResultsTemplate = ({ currentQuestion, user, game }) => {
+  return (
+    <>
+      <VotingResults 
+        currentQuestion={currentQuestion} 
+        user={user}
+        participants={game.participants}></VotingResults>
+    </>
+  )
+}
 
 const getQuestionByState = ({ game, user }) => {
   // The question can have 4 states
@@ -96,8 +107,8 @@ const getQuestionByState = ({ game, user }) => {
       return AnsweredWaitingTemplate({ ...props });
     case "voting":
       return VotingTemplate({ ...props });
-    // case "voting-results":
-    //   return VotingResultsTemplate();
+    case "voted-waiting":
+      return VotingResultsTemplate({...props});
     case "not-answered":
     default:
       return NotAnsweredTemplate({ ...props });
