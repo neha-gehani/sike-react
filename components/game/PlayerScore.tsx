@@ -23,7 +23,7 @@ const PlayerScore: React.FC<LoaderProps> = ({
       )}
     >
       <span>
-        {isCurrentPlayerScore ? `Your score` : score.user.name} - {score.score}
+        {isCurrentPlayerScore ? `Your score` : score.user.name}: {score.score}
       </span>
       {isWinner && <span className="badge badge-success">WINNER!!</span>}
     </div>
