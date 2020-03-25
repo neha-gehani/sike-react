@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from "react";
+import React, { useState, MouseEvent, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import ButtonWithLoader from "./ButtonWithLoader";
 
@@ -9,6 +9,7 @@ interface TextFormProps {
   placeholder: string;
   buttonText: string;
   isLoading?: boolean;
+  initialValue?: string | string[];
 }
 
 const TextForm: React.FC<TextFormProps> = ({
@@ -17,14 +18,20 @@ const TextForm: React.FC<TextFormProps> = ({
   headerText,
   placeholder,
   buttonText,
-  isLoading
+  isLoading,
+  initialValue
 }) => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(initialValue || "");
 
   const updateText = text => {
     setText(text);
     onTextUpdated(text);
   };
+
+  useEffect(() => {
+    console.log('initialValue' , {initialValue})
+    // setText(initialValue);
+  }, [initialValue]);
 
   return (
     <>
