@@ -6,18 +6,21 @@ interface LoaderProps {
   score: Score;
   isCurrentPlayerScore?: boolean;
   isWinner?: boolean;
+  className?: string;
 }
 
 const PlayerScore: React.FC<LoaderProps> = ({
   score,
   isCurrentPlayerScore,
-  isWinner
+  isWinner,
+  className
 }) => {
   return (
     <div
-      className={
-        "player-score d-flex justify-content-between align-items-center mb-3"
-      }
+      className={classnames(
+        ["player-score d-flex justify-content-between align-items-center mb-3"],
+        className
+      )}
     >
       <span>
         {isCurrentPlayerScore ? `Your score` : score.user.name} - {score.score}

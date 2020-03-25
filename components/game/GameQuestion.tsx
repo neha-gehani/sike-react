@@ -1,6 +1,5 @@
 import React, { useState, MouseEvent } from "react";
 import keyBy from "lodash/keyBy";
-import { Row, Col, Button } from "react-bootstrap";
 import { Game, User, Question, Answer } from "../../api/interface";
 import { sendAnswer } from "../../api/questions";
 import { voteForAnswer } from "../../api/answer";
@@ -9,6 +8,8 @@ import NotAnswered from "./question/NotAnswered";
 import AnsweredWaiting from "./question/AnsweredWaiting";
 import Voting from "./question/Voting";
 import VotingResults from "./question/VotingResults";
+import { getCurrentUserScore } from "../../helpers/game";
+import PlayerScore from "./PlayerScore";
 
 const getQuestionState: (
   question: Question,
@@ -110,12 +111,19 @@ interface GameProps {
 }
 
 const GameQuestion: React.FC<GameProps> = ({ game, user }) => {
+  const myScore = getCurrentUserScore(game.scores, game.user.id);
   return (
     <>
       {getQuestionByState({
         game,
         user
       })}
+
+      <PlayerScore
+        score={myScore}
+        className="current-score"
+        isCurrentPlayerScore={true}
+      />
     </>
   );
 };
