@@ -3,9 +3,11 @@ import { Button } from "react-bootstrap";
 import { Game } from "../../api/interface";
 import { useSelector } from "react-redux";
 import { InitialState } from "../../store";
+import ButtonWithLoader from "../global/ButtonWithLoader";
 
 interface GameProps {
   onClickStart: (event: MouseEvent<HTMLButtonElement>) => void;
+  isStarting?: boolean;
 }
 
 interface StateProps {
@@ -13,7 +15,7 @@ interface StateProps {
   userId: number;
 }
 
-const GameNotStarted: React.FC<GameProps> = ({ onClickStart }) => {
+const GameNotStarted: React.FC<GameProps> = ({ onClickStart, isStarting }) => {
   const { game, userId } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -31,13 +33,13 @@ const GameNotStarted: React.FC<GameProps> = ({ onClickStart }) => {
         </p>
       ))}
       {userId === game.user.id ? (
-        <Button
-          variant="primary"
+        <ButtonWithLoader
+          buttonVariant="outline-primary"
+          buttonText="Start game"
           onClick={onClickStart}
           className="w-100 my-3"
-        >
-          Start game
-        </Button>
+          isLoading={isStarting}
+        />
       ) : (
         ""
       )}
