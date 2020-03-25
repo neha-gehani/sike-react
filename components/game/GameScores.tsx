@@ -4,6 +4,7 @@ import { Game, Score } from "../../api/interface";
 import { useSelector } from "react-redux";
 import { InitialState } from "../../store";
 import PlayerScore from "./PlayerScore";
+import { getCurrentUserScore } from "../../helpers/game";
 
 interface GameProps {
   onClickStart: (event: MouseEvent<HTMLButtonElement>) => void;
