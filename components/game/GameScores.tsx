@@ -3,6 +3,8 @@ import { Button } from "react-bootstrap";
 import { Game, Score } from "../../api/interface";
 import { useSelector } from "react-redux";
 import { InitialState } from "../../store";
+import PlayerScore from "./PlayerScore";
+import { getCurrentUserScore } from "../../helpers/game";
 
 interface GameProps {
   onClickStart: (event: MouseEvent<HTMLButtonElement>) => void;
@@ -23,18 +25,29 @@ const GameScores: React.FC<GameProps> = ({ onClickStart }) => {
     }
   );
 
-  const userScore: Score = game.scores.find(score => score.user.id === userId);
+  var winnerScore = Math.max.apply(
+    Math,
+    game.scores.map(o => o.score)
+  );
+
+  const userScore: Score = getCurrentUserScore(game.scores, userId);
   const otherUsersScores: Score[] = game.scores.filter(
     score => score.user.id !== userId
   );
   return (
     <>
       <h3 className="mb-4">You've been Sike-d!</h3>
-      <p className="mb-3">Your score - {userScore.score}</p>
+      <PlayerScore
+        score={userScore}
+        isCurrentPlayerScore={true}
+        isWinner={userScore.score === winnerScore}
+      />
       {otherUsersScores.map((scoreDetails, index) => (
-        <p className="mb-3" key={index}>
-          {scoreDetails.user.name} - {scoreDetails.score}
-        </p>
+        <PlayerScore
+          score={scoreDetails}
+          key={index}
+          isWinner={scoreDetails.score === winnerScore}
+        />
       ))}
       <Button variant="secondary" onClick={onClickStart} className="w-100 my-3">
         Start a new game

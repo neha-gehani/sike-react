@@ -3,7 +3,6 @@
   height: 150px;
 }
 
-
 // Answered Waiting
 .not-answered-badge {
   position: absolute;
@@ -28,11 +27,21 @@
   }
 }
 
-
 .clickable-answer {
   cursor: pointer;
 }
 
 .non-clickable-answer {
-  color: grey
+  color: grey;
+}
+
+.current-score {
+  position: fixed;
+  left: 0;
+  bottom: -1rem;
+  padding: 1rem;
+  background-color: $light;
+  color: $dark;
+  width: 100%;
+  box-shadow: 0px -2px 5px 0px rgba(0, 0, 0, 0.3);
 }
