@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { NextPage } from "next";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { guestLogin } from "../api/auth";
-import { createGame } from "../api/game";
-import { User } from "../api/interface";
 import TextForm from "../components/global/TextForm";
 import Router from "next/router";
 import { LayoutPageProps } from "./_app";
@@ -14,12 +12,13 @@ interface LoginPageProps extends LayoutPageProps {
 
 const Login: NextPage<LoginPageProps> = () => {
   const [name, setName] = useState("");
-  const [user, setUser] = useState<User>({ id: -1, token: "", role: "" });
+  const [isLoading, setIsLoading] = useState(false);
 
   const doGuestLogin = async () => {
     if (name && name.length >= 3) {
+      setIsLoading(true);
       const user = await guestLogin(name);
-      setUser(user);
+      setIsLoading(false);
       Router.push("/");
     }
   };
@@ -36,6 +35,7 @@ const Login: NextPage<LoginPageProps> = () => {
                 headerText="Welcome :)"
                 buttonText="Let's go!"
                 placeholder="Tell us your name"
+                isLoading={isLoading}
               />
             </div>
           </Col>
