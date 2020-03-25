@@ -33,3 +33,12 @@ body,
   hyphens: auto;
 
 }
+
+.toast {
+  position: absolute;
+  bottom: 2rem;
+  margin: 0 auto;
+  left: 0;
+  color: black;
+  right: 0;
+}
