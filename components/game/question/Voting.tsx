@@ -69,7 +69,6 @@ const Voting: React.FC<VotingProps> = ({
     })
     return names
   }));
-  console.log(peopleVoted)
 
   const [voteState, setVoteState] = useState(voteStateTemp);
   const [selectedAnswer, setSelectedAnswer] = useState(selectedAnswerTemp);
