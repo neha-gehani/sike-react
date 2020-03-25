@@ -28,11 +28,6 @@ const TextForm: React.FC<TextFormProps> = ({
     onTextUpdated(text);
   };
 
-  useEffect(() => {
-    console.log('initialValue' , {initialValue})
-    // setText(initialValue);
-  }, [initialValue]);
-
   return (
     <>
       {headerText && <h2 className="my-4 text-light">{headerText}</h2>}
