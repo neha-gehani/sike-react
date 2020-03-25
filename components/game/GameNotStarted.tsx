@@ -40,7 +40,9 @@ const GameNotStarted: React.FC<GameProps> = ({ onClickStart, isStarting }) => {
           className="w-100 my-3"
           isLoading={isStarting}
         />
-      ) : (<></>)}
+      ) : (<>
+        <p>Once we have 3, the host can hit start the game</p>
+      </>)}
     </>
   );
 };
