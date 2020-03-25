@@ -14,7 +14,7 @@ export interface Answer {
   id: number;
   answerStr: string;
   user?: User;
-  vote?: Vote[]
+  vote?: Vote[];
 }
 
 export interface Vote {
@@ -29,11 +29,17 @@ export interface Question {
   answers?: Answer[];
 }
 
+export interface Score {
+  score: number;
+  user: User;
+}
+
 export interface Game {
   identifier: string;
   user: User;
   id: number;
   participants: Participant[];
   questions?: Question[];
-  status: "created" | "active";
+  scores?: Score[];
+  status: "created" | "active" | "finished";
 }

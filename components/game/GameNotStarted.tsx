@@ -1,14 +1,27 @@
 import React, { useState, MouseEvent } from "react";
 import { Button } from "react-bootstrap";
-import { Game, User } from "../../api/interface";
+import { Game } from "../../api/interface";
+import { useSelector } from "react-redux";
+import { InitialState } from "../../store";
 
 interface GameProps {
   onClickStart: (event: MouseEvent<HTMLButtonElement>) => void;
-  game: Game;
-  user: User;
 }
 
-const GameNotStarted: React.FC<GameProps> = ({ onClickStart, game, user }) => {
+interface StateProps {
+  game: Game;
+  userId: number;
+}
+
+const GameNotStarted: React.FC<GameProps> = ({ onClickStart }) => {
+  const { game, userId } = useSelector<InitialState, StateProps>(
+    (state: InitialState) => {
+      return {
+        game: state.game,
+        userId: state.user && state.user.id
+      };
+    }
+  );
   return (
     <>
       <h3 className="mb-4">Waiting for participants...</h3>
@@ -17,7 +30,7 @@ const GameNotStarted: React.FC<GameProps> = ({ onClickStart, game, user }) => {
           {participant.name}
         </p>
       ))}
-      {user.id === game.user.id ? (
+      {userId === game.user.id ? (
         <Button
           variant="secondary"
           onClick={onClickStart}

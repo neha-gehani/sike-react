@@ -1,39 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NextPage } from "next";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import {guestLogin} from "../api/auth";
+import { guestLogin } from "../api/auth";
 import { createGame } from "../api/game";
 import { User } from "../api/interface";
 import TextForm from "../components/global/TextForm";
 import Router from "next/router";
 import { LayoutPageProps } from "./_app";
+import { getUser } from "../api/user";
+import { useSelector, useDispatch } from "react-redux";
+import { InitialState } from "../store";
+import { updateUserStore } from "../states/user/actions";
 
-const Home: NextPage<LayoutPageProps> = () => {
-  const [name, setName] = useState("");
-  const [user, setUser] = useState<User>({ id: -1, token: "", role: "" });
+interface StateProps {
+  user: User;
+}
+
+const Home: NextPage<LayoutPageProps> = props => {
+  // const [user, setUser] = useState<User>({ id: -1, token: "", role: "" });
+  const { user } = useSelector<InitialState, StateProps>(
+    (state: InitialState) => {
+      return {
+        user: state.user
+      };
+    }
+  );
+  let hasFetchedUser = false;
+
+  const dispatch = useDispatch();
+
+  const setUser = userData => {
+    dispatch(updateUserStore(userData));
+  };
+
+  const fetchUser = async () => {
+    const userData = await getUser();
+    hasFetchedUser = true;
+    setUser(userData);
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, [hasFetchedUser]);
 
   const newGame = async () => {
     console.log("Start a new game");
-    if (name) {
-      const gameDetails = await createGame();
-      Router.push(`/game/${gameDetails.identifier}`);
-    } else {
-      console.log(name);
-      console.log("we can't do shit");
-      // TODO: show error
-      // this.setState({ errorMessage: "You have not entered a name" });
-    }
+    const gameDetails = await createGame();
+    Router.push(`/game/${gameDetails.identifier}`);
   };
 
   const joinGame = () => {
     Router.push("/game/join");
-  };
-
-  const doGuestLogin = async () => {
-    if (name && name.length >= 3) {
-      const user = await guestLogin(name);
-      setUser(user);
-    }
   };
 
   return (
@@ -42,9 +59,9 @@ const Home: NextPage<LayoutPageProps> = () => {
         <Row className="landing-container h-100 align-items-stretch">
           <Col>
             <div className="h-100 d-flex flex-column justify-content-start align-items-center">
-              {user && user.id !== -1 ? (
+              {user.id ? (
                 <div className="text-light w-100 text-center">
-                  <h2>Hello, {name}!</h2>
+                  <h2>Hello, {user.name}!</h2>
                   <div className="submit w-100 mb-3">
                     <Button
                       variant="primary"
@@ -65,13 +82,7 @@ const Home: NextPage<LayoutPageProps> = () => {
                   </div>
                 </div>
               ) : (
-                <TextForm
-                  onClick={doGuestLogin}
-                  onTextUpdated={setName}
-                  headerText="Welcome :)"
-                  buttonText="Let's go!"
-                  placeholder="Tell us your name"
-                />
+                ""
               )}
             </div>
           </Col>
