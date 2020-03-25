@@ -9,8 +9,19 @@ body,
 //   background-color: $dark;
 // }
 
+.container {
+  max-width: 480px;
+}
+
+.app-container {
+  min-height: 100vh;
+  background: red;
+  display: flex;
+  flex-direction: column;
+}
+
 .page {
-  min-height: calc(100% - 200px); // temp fix. sending a flexbox rewrite in sometime.
+  flex-grow: 1;
 }
 
 .text-bold {

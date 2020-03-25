@@ -7,7 +7,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
   return (
-    <div className="bg-dark">
+    <div className="bg-dark header-container">
       <Container>
         <Row>
           <Col>

@@ -29,7 +29,7 @@ function App({ Component, pageProps, store }: IProps) {
   }, [isLoggedIn]);
   return (
     <Provider store={store}>
-      <div className="h-100">
+      <div className="app-container">
         <Header />
         <Component {...pageProps} />
       </div>
