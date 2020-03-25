@@ -29,7 +29,7 @@ const GameScores: React.FC<GameProps> = ({ onClickStart }) => {
     game.scores.map(o => o.score)
   );
 
-  const userScore: Score = game.scores.find(score => score.user.id === userId);
+  const userScore: Score = getCurrentUserScore(game.scores, userId);
   const otherUsersScores: Score[] = game.scores.filter(
     score => score.user.id !== userId
   );
