@@ -36,17 +36,9 @@ const GameScores: React.FC<GameProps> = ({ onClickStart }) => {
           {scoreDetails.user.name} - {scoreDetails.score}
         </p>
       ))}
-      {userId === game.user.id ? (
-        <Button
-          variant="secondary"
-          onClick={onClickStart}
-          className="w-100 my-3"
-        >
-          Start a new game
-        </Button>
-      ) : (
-        ""
-      )}
+      <Button variant="secondary" onClick={onClickStart} className="w-100 my-3">
+        Start a new game
+      </Button>
     </>
   );
 };
