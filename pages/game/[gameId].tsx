@@ -70,7 +70,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
     protocol = window.location.protocol;
   }
   console.log(`Your protocol is ${protocol}`);
-  const socket
+  let socket;
 
   const router = useRouter();
   const { gameId } = router.query;
