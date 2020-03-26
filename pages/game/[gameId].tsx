@@ -81,9 +81,11 @@ const GamePage: NextPage<LayoutPageProps> = () => {
     dispatch(updateGameStore(gameData));
     // TODO: reconnect when socket breals.
     // TODO: alert with error when not connected.
-    socket.on(gameData.identifier, () => {
-      fetchGame();
-    });
+    if (socket) {
+      socket.on(gameData.identifier, () => {
+        fetchGame();
+      });
+    }
   };
 
   const setUser = userData => {
