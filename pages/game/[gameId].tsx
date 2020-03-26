@@ -79,13 +79,6 @@ const GamePage: NextPage<LayoutPageProps> = () => {
 
   const setGame = gameData => {
     dispatch(updateGameStore(gameData));
-    // TODO: reconnect when socket breals.
-    // TODO: alert with error when not connected.
-    if (socket) {
-      socket.on(gameData.identifier, () => {
-        fetchGame();
-      });
-    }
   };
 
   const setUser = userData => {
@@ -104,12 +97,22 @@ const GamePage: NextPage<LayoutPageProps> = () => {
 
   useEffect(() => {
     let socket = socketIOClient(`${protocol}//sike-api.herokuapp.com`); // TODO: get from central config thing.
+    socket.on(gameId, () => {
+      fetchGame();
+    });
     // note: dont use ://sike-api.herokuapp.com in the above line. doesnt work.
   }, []);
 
   useEffect(() => {
     fetchGame();
     fetchUser();
+    // TODO: reconnect when socket breals.
+    // TODO: alert with error when not connected.
+    if (socket) {
+      socket.on(gameId, () => {
+        fetchGame();
+      });
+    }
   }, [gameId]);
 
   // keep polling game data
