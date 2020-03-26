@@ -19,6 +19,7 @@ import Router, { useRouter } from "next/router";
 import { updateUserStore } from "../../states/user/actions";
 import GameScores from "../../components/game/GameScores";
 import FullPageLoader from "../../components/global/FullPageLoader";
+import socketIOClient from "socket.io-client";
 
 interface StateProps {
   game: Game;
@@ -63,6 +64,8 @@ const GamePage: NextPage<LayoutPageProps> = () => {
       };
     }
   );
+  
+  const socket = socketIOClient("://sike-api.herokuapp.com"); // TODO: get from central config thing.
 
   const router = useRouter();
   const { gameId } = router.query;
@@ -71,6 +74,11 @@ const GamePage: NextPage<LayoutPageProps> = () => {
 
   const setGame = gameData => {
     dispatch(updateGameStore(gameData));
+    // TODO: reconnect when socket breals.
+    // TODO: alert with error when not connected.
+    socket.on(gameData.identifier, () => {
+      fetchGame();
+    });
   };
 
   const setUser = userData => {
@@ -93,9 +101,9 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   }, [gameId]);
 
   // keep polling game data
-  useRecursiveTimeout(async () => {
-    fetchGame();
-  }, 10 * 1000);
+  // useRecursiveTimeout(async () => {
+  //   fetchGame();
+  // }, 10 * 1000);
 
   const startNewGame = async () => {
     setIsStartingGame(true);

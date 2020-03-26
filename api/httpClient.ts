@@ -26,7 +26,7 @@ const callApi = async <T>(requestParams: ApiRequestParams): Promise<T> => {
     headers: headers
   };
 
-  let finalUrl = `//sike-api.herokuapp.com${url}`;
+  let finalUrl = `//sike-api.herokuapp.com${url}`; // TODO: get from central config thing. maybe a .env?
   if (method === "get") {
     const queryParams = new URLSearchParams(data);
     finalUrl = `${finalUrl}?${queryParams}`;
