@@ -19,6 +19,10 @@ const GameCode: React.FC<GameProps> = ({}) => {
       };
     }
   );
+  let protocol = 'http:'
+  if (process.browser) {
+    protocol = window.location.protocol;
+  }
   return (
     <>
       <div className="text-center mb-4">
@@ -27,7 +31,7 @@ const GameCode: React.FC<GameProps> = ({}) => {
         <Share 
           title="Sike Game"
           text={`${game.user.name} has invited you to join their game`}
-          url={`//sike-game.herokuapp.com/join/${game.identifier}`}
+          url={`${protocol}//sike-game.herokuapp.com/join/${game.identifier}`}
         />
       </div>
     </>
