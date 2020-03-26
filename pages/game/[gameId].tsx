@@ -65,7 +65,13 @@ const GamePage: NextPage<LayoutPageProps> = () => {
     }
   );
   
-  const socket = socketIOClient("://sike-api.herokuapp.com"); // TODO: get from central config thing.
+  let protocol = 'http:'
+  if (process.browser) {
+    protocol = window.location.protocol;
+  }
+  console.log(`Your protocol is ${protocol}`);
+  const socket = socketIOClient(`${protocol}//sike-api.herokuapp.com`); // TODO: get from central config thing.
+  // note: dont use ://sike-api.herokuapp.com in the above line. doesnt work.
 
   const router = useRouter();
   const { gameId } = router.query;
