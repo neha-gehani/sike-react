@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NextPage, NextPageContext } from "next";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Modal } from "react-bootstrap";
 
 import { Game, User } from "../../api/interface";
 import { getUser } from "../../api/user";
@@ -56,6 +56,8 @@ const Scores = ({ redirectToHome }) => {
 
 const GamePage: NextPage<LayoutPageProps> = () => {
   const [isStartingGame, setIsStartingGame] = useState(false);
+  const [isExitModalVisible, setIsExitModalVisible] = useState(false);
+  const [hasConfirmedAbandon, setHasConfirmedAbandon] = useState(false);
   const { game, user } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -64,8 +66,8 @@ const GamePage: NextPage<LayoutPageProps> = () => {
       };
     }
   );
-  
-  let protocol = 'http:'
+
+  let protocol = "http:";
   if (process.browser) {
     protocol = window.location.protocol;
   }
@@ -95,15 +97,38 @@ const GamePage: NextPage<LayoutPageProps> = () => {
     setUser(userData);
   };
 
+  const abandonGame = () => {
+    setHasConfirmedAbandon(true);
+    // setIsExitModalVisible(false);
+    Router.back();
+  };
+
   useEffect(() => {
+    console.log("here 2");
     let socket = socketIOClient(`${protocol}//sike-api.herokuapp.com`); // TODO: get from central config thing.
     socket.on(gameId, () => {
       fetchGame();
+    });
+
+    Router.beforePopState(() => {
+      console.log("12312313");
+      // Router.push(`/game/${gameId}`, null, { shallow: true });
+      // window.alert("URL shouldn't change 😢");
+      if (!isExitModalVisible) {
+        Router.push("/game/[gameId]", `/game/${gameId}`, { shallow: true });
+        setIsExitModalVisible(true);
+      } else {
+        if (hasConfirmedAbandon) {
+          return true;
+        }
+      }
+      return false;
     });
     // note: dont use ://sike-api.herokuapp.com in the above line. doesnt work.
   }, []);
 
   useEffect(() => {
+    console.log("here");
     fetchGame();
     fetchUser();
     // TODO: reconnect when socket breals.
@@ -164,6 +189,33 @@ const GamePage: NextPage<LayoutPageProps> = () => {
           )}
         </Row>
       </Container>
+      <Modal
+        show={isExitModalVisible}
+        onHide={() => setIsExitModalVisible(false)}
+        className="text-dark"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Abandon game?</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>
+            The game will end if you leave it. Is this really what you want? :(
+          </p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setIsExitModalVisible(false)}
+          >
+            No I want to play!
+          </Button>
+          <Button variant="primary" onClick={() => abandonGame()}>
+            Yes I'm a loser
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
