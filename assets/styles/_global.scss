@@ -9,8 +9,15 @@ body,
 //   background-color: $dark;
 // }
 
+.app-container {
+  min-height: 100vh;
+  background: red;
+  display: flex;
+  flex-direction: column;
+}
+
 .page {
-  min-height: calc(100% - 185px);
+  flex-grow: 1;
 }
 
 .text-bold {
@@ -36,4 +43,13 @@ body,
   -webkit-hyphens: auto;
   hyphens: auto;
 
+}
+
+.toast {
+  position: absolute;
+  bottom: 2rem;
+  margin: 0 auto;
+  left: 0;
+  color: black;
+  right: 0;
 }

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { NextPage } from "next";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { guestLogin } from "../api/auth";
 import { createGame } from "../api/game";
 import { User } from "../api/interface";
-import TextForm from "../components/global/TextForm";
 import Router from "next/router";
 import { LayoutPageProps } from "./_app";
 import { getUser } from "../api/user";

@@ -30,7 +30,6 @@ const VotingResults: React.FC<VotingResultsProps> = ({
   const userSiked = flatten(currentQuestion.answers.map((answer: Answer) => {
     return answer.votes.find((vote: Vote) => vote.id !== user.id)
   })).filter((user) => user !== undefined );
-  console.log({userSiked})
 
   return (
     <>

@@ -19,6 +19,7 @@ import Router, { useRouter } from "next/router";
 import { updateUserStore } from "../../states/user/actions";
 import GameScores from "../../components/game/GameScores";
 import FullPageLoader from "../../components/global/FullPageLoader";
+import socketIOClient from "socket.io-client";
 
 interface StateProps {
   game: Game;
@@ -63,6 +64,13 @@ const GamePage: NextPage<LayoutPageProps> = () => {
       };
     }
   );
+  
+  let protocol = 'http:'
+  if (process.browser) {
+    protocol = window.location.protocol;
+  }
+  console.log(`Your protocol is ${protocol}`);
+  let socket;
 
   const router = useRouter();
   const { gameId } = router.query;
@@ -88,14 +96,29 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   };
 
   useEffect(() => {
+    let socket = socketIOClient(`${protocol}//sike-api.herokuapp.com`); // TODO: get from central config thing.
+    socket.on(gameId, () => {
+      fetchGame();
+    });
+    // note: dont use ://sike-api.herokuapp.com in the above line. doesnt work.
+  }, []);
+
+  useEffect(() => {
     fetchGame();
     fetchUser();
+    // TODO: reconnect when socket breals.
+    // TODO: alert with error when not connected.
+    if (socket) {
+      socket.on(gameId, () => {
+        fetchGame();
+      });
+    }
   }, [gameId]);
 
   // keep polling game data
-  useRecursiveTimeout(async () => {
-    fetchGame();
-  }, 10 * 1000);
+  // useRecursiveTimeout(async () => {
+  //   fetchGame();
+  // }, 10 * 1000);
 
   const startNewGame = async () => {
     setIsStartingGame(true);

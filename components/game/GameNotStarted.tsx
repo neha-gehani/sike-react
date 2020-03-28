@@ -1,5 +1,5 @@
-import React, { useState, MouseEvent } from "react";
-import { Button } from "react-bootstrap";
+import React, { MouseEvent } from "react";
+import { Badge } from "react-bootstrap";
 import { Game } from "../../api/interface";
 import { useSelector } from "react-redux";
 import { InitialState } from "../../store";
@@ -41,7 +41,9 @@ const GameNotStarted: React.FC<GameProps> = ({ onClickStart, isStarting }) => {
           isLoading={isStarting}
         />
       ) : (<>
-        <p>Once we have 3, the host can hit start the game</p>
+      <Badge
+        className="floating-badge dont-break-out"
+        variant='primary'>Once we have 3, the host can hit start the game</Badge>
       </>)}
     </>
   );
