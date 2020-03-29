@@ -1,0 +1,17 @@
+{
+  "theme_color": "#2196f3",
+  "background_color": "#2196f3",
+  "display": "fullscreen",
+  "name": "Sike your friends",
+  "short_name": "Sike",
+  "Scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "splash_pages": null
+}
