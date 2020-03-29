@@ -40,7 +40,7 @@ export const guestLogin = async (name: string): Promise<User> => {
 };
 
 export const isAuthenticated = () => {
-  return !!auth.getToken() && auth.getToken() != "";
+  return !!auth.getToken();
 };
 
 export const getToken = () => {
