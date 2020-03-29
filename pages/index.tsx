@@ -34,6 +34,9 @@ const Home: NextPage<LayoutPageProps> = props => {
 
   const fetchUser = async () => {
     const userData = await getUser();
+    if(!userData){
+      Router.push('/login')
+    }
     hasFetchedUser = true;
     setUser(userData);
   };
