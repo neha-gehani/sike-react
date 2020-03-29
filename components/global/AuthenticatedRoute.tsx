@@ -8,7 +8,7 @@ interface HeaderProps {
 
 const AuthenticatedRoute: React.FC<HeaderProps> = ({ className }) => {
   if (!isAuthenticated()) {
-    Router.push("/login");
+    Router.replace("/login");
   }
 
   return null;

@@ -19,7 +19,7 @@ const Login: NextPage<LoginPageProps> = () => {
       setIsLoading(true);
       const user = await guestLogin(name);
       setIsLoading(false);
-      Router.push("/");
+      Router.replace("/");
     }
   };
 
