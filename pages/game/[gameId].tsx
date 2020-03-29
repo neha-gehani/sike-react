@@ -64,8 +64,12 @@ const GamePage: NextPage<LayoutPageProps> = () => {
       };
     }
   );
-  
-  let protocol = 'http:'
+
+  Router.events.on("beforePopState", () => {
+    console.log("before pop state");
+  });
+
+  let protocol = "http:";
   if (process.browser) {
     protocol = window.location.protocol;
   }
@@ -95,11 +99,33 @@ const GamePage: NextPage<LayoutPageProps> = () => {
     setUser(userData);
   };
 
+  const abandonGame = () => {
+    setHasConfirmedAbandon(true);
+    // setIsExitModalVisible(false);
+    console.log(Router);
+    Router.push("/");
+  };
+
   useEffect(() => {
     let socket = socketIOClient(`${protocol}//sike-api.herokuapp.com`); // TODO: get from central config thing.
     socket.on(gameId, () => {
       fetchGame();
     });
+
+    // Router.beforePopState(() => {
+    //   console.log("12312313");
+    //   // Router.push(`/game/${gameId}`, null, { shallow: true });
+    //   // window.alert("URL shouldn't change 😢");
+    //   if (!isExitModalVisible) {
+    //     Router.replace("/game/[gameId]", `/game/${gameId}`);
+    //     setIsExitModalVisible(true);
+    //   } else {
+    //     if (hasConfirmedAbandon) {
+    //       return true;
+    //     }
+    //   }
+    //   return false;
+    // });
     // note: dont use ://sike-api.herokuapp.com in the above line. doesnt work.
   }, []);
 
