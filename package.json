@@ -6,7 +6,7 @@
     "postinstall": "npm run build",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next starts -p $PORT"
   },
   "dependencies": {
     "@types/isomorphic-fetch": "0.0.35",

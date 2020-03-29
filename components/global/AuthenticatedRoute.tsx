@@ -35,7 +35,6 @@ const AuthenticatedRoute: React.FC<AuthenticatedRouteProps> = ({ className }) =>
       if(!isLoggedIn) {
         Router.push('/login');
       } else {
-        console.log('Fetched user')
         fetchUser();
       }
     }
