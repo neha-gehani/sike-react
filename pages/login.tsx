@@ -24,15 +24,16 @@ const Login: NextPage<LoginPageProps> = () => {
   };
 
   return (
-    <div className="bg-dark page">
-      <Container className="h-100">
-        <Row className="landing-container h-100 align-items-stretch">
+    <div className="page">
+      <Container>
+        <Row className="landing-container align-items-stretch">
           <Col>
-            <div className="h-100 d-flex flex-column justify-content-start align-items-center">
+            <div className="d-flex flex-column justify-content-start">
               <TextForm
                 onClick={doGuestLogin}
                 onTextUpdated={setName}
-                headerText="Welcome :)"
+                headerText="Welcome"
+                descriptionText="To continue, tell us what your friends call you."
                 buttonText="Let's go!"
                 placeholder="Tell us your name"
                 isLoading={isLoading}

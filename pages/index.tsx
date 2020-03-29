@@ -57,31 +57,32 @@ const Home: NextPage<LayoutPageProps> = props => {
   };
 
   return (
-    <div className="bg-dark page">
-      <Container className="h-100">
-        <Row className="landing-container h-100 align-items-stretch">
+    <div className="page">
+      <Container>
+        <Row className="landing-container align-items-stretch">
           <Col>
-            <div className="h-100 d-flex flex-column justify-content-start align-items-center">
+            <div className="d-flex flex-column justify-content-start">
               {user.id ? (
-                <div className="text-light w-100 text-center">
-                  <h2>Hello, {user.name}!</h2>
-                  <div className="submit w-100 mb-3">
+                <div className="w-100">
+                  <h4>Hey {user.name}!</h4>
+                  <p className="lead">Start a new game or join an existing game started by a friend.</p>
+                  <div className="submit w-100 mb-2">
+                    <ButtonWithLoader
+                      buttonVariant="primary"
+                      buttonText="Start New Game"
+                      onClick={() => newGame()}
+                      className="w-100"
+                      isLoading={isCreatingGame}
+                    />
+                  </div>
+                  <div className="submit w-100 mb-2">
                     <Button
-                      variant="primary"
+                      variant="secondary"
                       onClick={() => joinGame()}
                       className="w-100"
                     >
                       Join Game
                     </Button>
-                  </div>
-                  <div className="submit w-100 mb-3">
-                    <ButtonWithLoader
-                      buttonVariant="primary"
-                      buttonText="Start New Game"
-                      onClick={() => newGame()}
-                      className="w-100 mb-4"
-                      isLoading={isCreatingGame}
-                    />
                   </div>
                 </div>
               ) : (

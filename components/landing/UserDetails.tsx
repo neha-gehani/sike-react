@@ -19,7 +19,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 
   return (
     <>
-      <h2 className="my-4 text-light">Welcome :)</h2>
+      <h2 className="mt-2 text-light">Welcome :)</h2>
       <div className="name w-100 mb-3">
         <input
           className="form-control"

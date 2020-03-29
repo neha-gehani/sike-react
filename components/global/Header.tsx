@@ -7,12 +7,12 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
   return (
-    <div className="bg-dark header-container">
+    <div className="header-container">
       <Container>
         <Row>
           <Col>
-            <div className="site-header">
-              <h1 className="site-branding">Sike!!</h1>
+            <div className="site-header pt-2">
+              <h2 className="site-branding">Sike!!</h2>
             </div>
           </Col>
         </Row>

@@ -6,6 +6,7 @@ interface TextFormProps {
   onClick: (event: MouseEvent<HTMLButtonElement>) => void;
   onTextUpdated: (param: string) => void;
   headerText?: string;
+  descriptionText?: string;
   placeholder: string;
   buttonText: string;
   isLoading?: boolean;
@@ -16,6 +17,7 @@ const TextForm: React.FC<TextFormProps> = ({
   onClick,
   onTextUpdated,
   headerText,
+  descriptionText,
   placeholder,
   buttonText,
   isLoading,
@@ -30,7 +32,8 @@ const TextForm: React.FC<TextFormProps> = ({
 
   return (
     <>
-      {headerText && <h2 className="my-4 text-light">{headerText}</h2>}
+      {headerText && <h4 className="mt-3">{headerText}</h4>}
+      {descriptionText && <p className="lead">{descriptionText}</p>}
       <div className="name w-100 mb-3">
         <input
           className="form-control"

@@ -25,10 +25,10 @@ const GameCode: React.FC<GameProps> = ({}) => {
   }
   return (
     <>
-      <div className="text-center mb-4">
-        <p>Ask your friends to join:</p>
-        <h3 className="text-primary">{game.identifier}</h3>
-        <Share 
+      <div className="mb-4">
+        <p>Share the code with your friends and ask them to join:</p>
+        <h3>{game.identifier}</h3>
+        <Share
           title="Sike Game"
           text={`${game.user.name} has invited you to join their game`}
           url={`${protocol}//sike-game.herokuapp.com/join/${game.identifier}`}

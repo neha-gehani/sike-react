@@ -26,12 +26,14 @@ const GameNotStarted: React.FC<GameProps> = ({ onClickStart, isStarting }) => {
   );
   return (
     <>
-      <h3 className="mb-4">Waiting for participants...</h3>
-      {game.participants.map((participant, index) => (
-        <p className="mb-3" key={index}>
-          {participant.name}
-        </p>
-      ))}
+      <h4 className="mb-2">Waiting for participants...</h4>
+      <ul>
+        {game.participants.map((participant, index) => (
+          <li className="mb-3" key={index}>
+            {participant.name}
+          </li>
+        ))}
+      </ul>
       {userId === game.user.id && game.participants.length >= 3 ? (
         <ButtonWithLoader
           buttonVariant="outline-primary"
@@ -43,7 +45,7 @@ const GameNotStarted: React.FC<GameProps> = ({ onClickStart, isStarting }) => {
       ) : (<>
       <Badge
         className="floating-badge dont-break-out"
-        variant='primary'>Once we have 3, the host can hit start the game</Badge>
+        variant="primary">You need at least 3 people to start the game.</Badge>
       </>)}
     </>
   );

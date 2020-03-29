@@ -115,11 +115,6 @@ const GamePage: NextPage<LayoutPageProps> = () => {
     }
   }, [gameId]);
 
-  // keep polling game data
-  // useRecursiveTimeout(async () => {
-  //   fetchGame();
-  // }, 10 * 1000);
-
   const startNewGame = async () => {
     setIsStartingGame(true);
     const gameDetails = await startGame(gameId);
@@ -154,7 +149,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   };
 
   return (
-    <div className="bg-dark page">
+    <div className="page">
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">
           {game.identifier && user.id ? (
