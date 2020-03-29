@@ -16,8 +16,10 @@ export class Auth {
   }
 
   setToken(newToken: string) {
-    Cookie.set(COOKIES.authToken, newToken);
-    this.token = newToken;
+    if(!!newToken) {
+      Cookie.set(COOKIES.authToken, newToken);
+      this.token = newToken;
+    }
   }
 }
 

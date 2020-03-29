@@ -37,7 +37,10 @@ const JoinDynamicGame: NextPage<LayoutPageProps> = () => {
 
   const fetchUser = async () => {
    const userData = await getUser();
-   setUser(userData);
+   if(!!userData) {
+    setUser(userData);
+    setIsAuth(true);
+   }
  };
 
  const router = useRouter();
