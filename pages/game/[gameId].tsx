@@ -20,6 +20,7 @@ import { updateUserStore } from "../../states/user/actions";
 import GameScores from "../../components/game/GameScores";
 import FullPageLoader from "../../components/global/FullPageLoader";
 import socketIOClient from "socket.io-client";
+import AuthenticatedRoute from "../../components/global/AuthenticatedRoute";
 
 interface StateProps {
   game: Game;
@@ -69,7 +70,6 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   if (process.browser) {
     protocol = window.location.protocol;
   }
-  console.log(`Your protocol is ${protocol}`);
   let socket;
 
   const router = useRouter();
@@ -155,6 +155,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
 
   return (
     <div className="bg-dark page">
+      <AuthenticatedRoute />
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">
           {game.identifier && user.id ? (

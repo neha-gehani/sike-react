@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { User } from "../../api/interface";
 import { getUser } from "../../api/user";
 import { joinGame } from "../../api/game";
-import { guestLogin } from "../../api/auth";
+import { guestLogin, isAuthenticated } from "../../api/auth";
 import { LayoutPageProps } from "../_app";
 
 import { Container, Row, Col, Button } from "react-bootstrap";
@@ -46,7 +46,11 @@ const JoinDynamicGame: NextPage<LayoutPageProps> = () => {
  const router = useRouter();
  const { gameId } = router.query;
   useEffect(() => {
-   fetchUser();
+    const isLoggedIn = isAuthenticated();
+    if(isLoggedIn) {
+      fetchUser();
+    }
+   
  }, [gameId]);
 
   const join = async () => {

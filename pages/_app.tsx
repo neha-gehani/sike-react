@@ -22,7 +22,6 @@ function App({ Component, pageProps, store }: IProps) {
   
   return (
     <Provider store={store}>
-      <AuthenticatedRoute />
       <div className="app-container">
         <Header />
         <Component {...pageProps} />
