@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
+import classnames from "classnames";
 
 interface HeaderProps {
   className?: string;
@@ -11,6 +12,9 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
     Router.back();
   };
 
+  const { pathname } = useRouter();
+  console.log(pathname);
+
   return (
     <div className="bg-dark header-container">
       <Container>
@@ -19,7 +23,9 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
             <Button
               onClick={goBack}
               variant="link"
-              className="text-primary back-button"
+              className={classnames(["text-primary back-button"], {
+                "d-none": pathname === "/" || pathname === "/login"
+              })}
             >
               {"< Back"}
             </Button>
