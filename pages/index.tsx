@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { createGame } from "../api/game";
 import { User } from "../api/interface";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { LayoutPageProps } from "./_app";
 import { getUser } from "../api/user";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,6 +16,7 @@ interface StateProps {
 }
 
 const Home: NextPage<LayoutPageProps> = props => {
+  const router = useRouter();
   const [isCreatingGame, setIsCreatingGame] = useState(false);
   const { user } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
@@ -46,11 +47,11 @@ const Home: NextPage<LayoutPageProps> = props => {
     setIsCreatingGame(true);
     const gameDetails = await createGame();
     setIsCreatingGame(false);
-    Router.push("/game/[gameId]", `/game/${gameDetails.identifier}`);
+    router.push("/game/[gameId]", `/game/${gameDetails.identifier}`);
   };
 
   const joinGame = () => {
-    Router.push("/game/join");
+    router.push("/game/join");
   };
 
   return (
