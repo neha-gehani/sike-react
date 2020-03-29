@@ -8,16 +8,21 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
   const goBack = () => {
-    console.log("asdasdasd");
     Router.back();
   };
 
   return (
     <div className="bg-dark header-container">
       <Container>
-        <Row>
+        <Row className="align-items-center">
           <Col>
-            <Button onClick={goBack}> Back </Button>
+            <Button
+              onClick={goBack}
+              variant="link"
+              className="text-primary back-button"
+            >
+              {"< Back"}
+            </Button>
             <div className="site-header">
               <h1 className="site-branding">Sike!!</h1>
             </div>
