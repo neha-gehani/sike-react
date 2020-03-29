@@ -6,7 +6,6 @@ import Router from "next/router";
 import withRedux from "next-redux-wrapper";
 import { store } from "../store";
 import { Provider } from "react-redux";
-import AuthenticatedRoute from "../components/global/AuthenticatedRoute";
 import { useEffect } from "react";
 
 export interface LayoutPageProps {
@@ -24,7 +23,7 @@ function App({ Component, pageProps, store }: IProps) {
   const isLoggedIn = isAuthenticated();
   useEffect(() => {
     if (!isLoggedIn) {
-      Router.push("/login");
+      Router.replace("/login");
     }
   }, [isLoggedIn]);
   return (
