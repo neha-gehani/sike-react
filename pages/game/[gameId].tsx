@@ -4,7 +4,7 @@ import { Container, Row, Col, Button, Modal } from "react-bootstrap";
 
 import { Game, User } from "../../api/interface";
 import { getUser } from "../../api/user";
-import { getGame, startGame } from "../../api/game";
+import { getGame, startGame, abandonGame } from "../../api/game";
 
 import useRecursiveTimeout from "../../helpers/customHook";
 
@@ -20,6 +20,7 @@ import { updateUserStore } from "../../states/user/actions";
 import GameScores from "../../components/game/GameScores";
 import FullPageLoader from "../../components/global/FullPageLoader";
 import socketIOClient from "socket.io-client";
+import ButtonWithLoader from "../../components/global/ButtonWithLoader";
 
 interface StateProps {
   game: Game;
@@ -54,10 +55,24 @@ const Scores = ({ redirectToHome }) => {
   );
 };
 
+const AbandonedGame = ({ redirectToHome }) => {
+  return (
+    <>
+      <div className="text-center">
+        <p>This game has been abandoned :(</p>
+        <Button variant="primary" onClick={redirectToHome} className="w-50">
+          Start a new game
+        </Button>
+      </div>
+    </>
+  );
+};
+
 const GamePage: NextPage<LayoutPageProps> = () => {
   const [isStartingGame, setIsStartingGame] = useState(false);
   const [isExitModalVisible, setIsExitModalVisible] = useState(false);
   const [hasConfirmedAbandon, setHasConfirmedAbandon] = useState(false);
+  const [isAbandoningGame, setIsAbandoningGame] = useState(false);
   const { game, user } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -97,13 +112,14 @@ const GamePage: NextPage<LayoutPageProps> = () => {
     setUser(userData);
   };
 
-  const abandonGame = () => {
+  const quitGame = async () => {
     setHasConfirmedAbandon(true);
+    setIsAbandoningGame(true);
+    const game = await abandonGame(gameId);
     router.push("/");
   };
 
   useEffect(() => {
-    console.log("here 2");
     let socket = socketIOClient(`${protocol}//sike-api.herokuapp.com`); // TODO: get from central config thing.
     socket.on(gameId, () => {
       fetchGame();
@@ -114,6 +130,10 @@ const GamePage: NextPage<LayoutPageProps> = () => {
 
   useEffect(() => {
     Router.beforePopState(() => {
+      //if the game has been abandoned. immediately exit
+      if (game.status === "abandoned") {
+        return true;
+      }
       if (!isExitModalVisible) {
         router.push("/game/[gameId]", `/game/${gameId}`);
         setIsExitModalVisible(true);
@@ -172,6 +192,8 @@ const GamePage: NextPage<LayoutPageProps> = () => {
         return Questions({ ...props, updateGame });
       case "finished":
         return Scores({ redirectToHome });
+      case "abandoned":
+        return AbandonedGame({ redirectToHome });
       default:
         return;
     }
@@ -210,9 +232,14 @@ const GamePage: NextPage<LayoutPageProps> = () => {
           >
             No I want to play!
           </Button>
-          <Button variant="primary" onClick={() => abandonGame()}>
-            Yes I'm a loser
-          </Button>
+          <div>
+            <ButtonWithLoader
+              buttonVariant="primary"
+              onClick={() => quitGame()}
+              buttonText={"Yes I'm a loser"}
+              isLoading={isAbandoningGame}
+            />
+          </div>
         </Modal.Footer>
       </Modal>
     </div>
