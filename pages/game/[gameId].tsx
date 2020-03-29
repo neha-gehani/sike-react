@@ -59,8 +59,13 @@ const AbandonedGame = ({ redirectToHome }) => {
   return (
     <>
       <div className="text-center">
+        <h3>Oops!</h3>
         <p>This game has been abandoned :(</p>
-        <Button variant="primary" onClick={redirectToHome} className="w-50">
+        <Button
+          variant="primary"
+          onClick={redirectToHome}
+          className="w-50 mt-4"
+        >
           Start a new game
         </Button>
       </div>
