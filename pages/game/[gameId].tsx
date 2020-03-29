@@ -99,8 +99,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
 
   const abandonGame = () => {
     setHasConfirmedAbandon(true);
-    // setIsExitModalVisible(false);
-    Router.back();
+    router.push("/");
   };
 
   useEffect(() => {
@@ -110,12 +109,13 @@ const GamePage: NextPage<LayoutPageProps> = () => {
       fetchGame();
     });
 
+    // note: dont use ://sike-api.herokuapp.com in the above line. doesnt work.
+  }, []);
+
+  useEffect(() => {
     Router.beforePopState(() => {
-      console.log("12312313");
-      // Router.push(`/game/${gameId}`, null, { shallow: true });
-      // window.alert("URL shouldn't change 😢");
       if (!isExitModalVisible) {
-        Router.push("/game/[gameId]", `/game/${gameId}`, { shallow: true });
+        router.push("/game/[gameId]", `/game/${gameId}`);
         setIsExitModalVisible(true);
       } else {
         if (hasConfirmedAbandon) {
@@ -124,8 +124,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
       }
       return false;
     });
-    // note: dont use ://sike-api.herokuapp.com in the above line. doesnt work.
-  }, []);
+  });
 
   useEffect(() => {
     console.log("here");
@@ -158,7 +157,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   };
 
   const redirectToHome = () => {
-    Router.replace("/");
+    router.push("/");
   };
 
   const getGameByStatus = () => {
