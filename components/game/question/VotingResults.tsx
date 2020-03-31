@@ -28,8 +28,9 @@ const VotingResults: React.FC<VotingResultsProps> = ({
   const peopleWhoHaveNotVoted = differenceBy(participants, peopleVoted, 'id')
   
   const userSiked = flatten(currentQuestion.answers.map((answer: Answer) => {
-    return answer.votes.find((vote: Vote) => vote.id !== user.id)
-  })).filter((user) => user !== undefined );
+    // find users answer and return the votes array that contains the list of users who voted
+    return answer.user.id === user.id ? answer.votes : [];
+  })).filter((user) => user !== undefined )
 
   return (
     <>
@@ -40,7 +41,7 @@ const VotingResults: React.FC<VotingResultsProps> = ({
       </Row>
       <Row className="user-siked">
         <Col>
-          <h3 className="mb-4">People who picked your answer...</h3>
+          <h3 className="mb-4">{ userSiked.length === 0 ? "Let's wait too see who picks your answer" : "People who picked your answer..." }</h3>
           <ListGroup variant="flush">
             {userSiked.map((person: User, index) => {
               return (
