@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { NextPage } from "next";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { createGame } from "../api/game";
 import { User } from "../api/interface";
 import Router, { useRouter } from "next/router";
 import { LayoutPageProps } from "./_app";
-import { getUser } from "../api/user";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { InitialState } from "../store";
-import { updateUserStore } from "../states/user/actions";
 import ButtonWithLoader from "../components/global/ButtonWithLoader";
+import AuthenticatedRoute from "../components/global/AuthenticatedRoute";
 
 interface StateProps {
   user: User;
@@ -25,23 +24,7 @@ const Home: NextPage<LayoutPageProps> = props => {
       };
     }
   );
-  let hasFetchedUser = false;
 
-  const dispatch = useDispatch();
-
-  const setUser = userData => {
-    dispatch(updateUserStore(userData));
-  };
-
-  const fetchUser = async () => {
-    const userData = await getUser();
-    hasFetchedUser = true;
-    setUser(userData);
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, [hasFetchedUser]);
 
   const newGame = async () => {
     setIsCreatingGame(true);
@@ -56,6 +39,7 @@ const Home: NextPage<LayoutPageProps> = props => {
 
   return (
     <div className="bg-dark page">
+      <AuthenticatedRoute />
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">
           <Col>

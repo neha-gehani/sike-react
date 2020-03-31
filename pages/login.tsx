@@ -7,7 +7,6 @@ import Router from "next/router";
 import { LayoutPageProps } from "./_app";
 
 interface LoginPageProps extends LayoutPageProps {
-  isAuthenticatedRoute: false;
 }
 
 const Login: NextPage<LoginPageProps> = () => {
@@ -17,7 +16,7 @@ const Login: NextPage<LoginPageProps> = () => {
   const doGuestLogin = async () => {
     if (name && name.length >= 3) {
       setIsLoading(true);
-      const user = await guestLogin(name);
+      await guestLogin(name);
       setIsLoading(false);
       Router.replace("/");
     }

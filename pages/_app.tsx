@@ -1,6 +1,5 @@
 import "../assets/styles/index.scss";
 import Header from "../components/global/Header";
-import { isAuthenticated } from "../api/auth";
 import { NextPage } from "next";
 import Router from "next/router";
 import withRedux from "next-redux-wrapper";
@@ -10,7 +9,6 @@ import { useEffect } from "react";
 
 export interface LayoutPageProps {
   className?: string;
-  isAuthenticatedRoute?: boolean;
 }
 
 interface IProps {
@@ -20,12 +18,6 @@ interface IProps {
 }
 
 function App({ Component, pageProps, store }: IProps) {
-  const isLoggedIn = isAuthenticated();
-  useEffect(() => {
-    if (!isLoggedIn) {
-      Router.replace("/login");
-    }
-  }, [isLoggedIn]);
   return (
     <Provider store={store}>
       <div className="app-container">

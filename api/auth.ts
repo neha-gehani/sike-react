@@ -18,8 +18,10 @@ export class Auth {
   }
 
   setToken(newToken: string) {
-    Cookie.set(COOKIES.authToken, newToken);
-    this.token = newToken;
+    if(!!newToken) {
+      Cookie.set(COOKIES.authToken, newToken);
+      this.token = newToken;
+    }
   }
 }
 
@@ -40,7 +42,7 @@ export const guestLogin = async (name: string): Promise<User> => {
 };
 
 export const isAuthenticated = () => {
-  return !!auth.getToken() && auth.getToken() != "";
+  return !!auth.getToken();
 };
 
 export const getToken = () => {
