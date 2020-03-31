@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { NextPage, NextPageContext } from "next";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Modal } from "react-bootstrap";
 
 import { Game, User } from "../../api/interface";
 import { getUser } from "../../api/user";
-import { getGame, startGame } from "../../api/game";
+import { getGame, startGame, abandonGame } from "../../api/game";
 
 import useRecursiveTimeout from "../../helpers/customHook";
 
@@ -20,6 +20,7 @@ import { updateUserStore } from "../../states/user/actions";
 import GameScores from "../../components/game/GameScores";
 import FullPageLoader from "../../components/global/FullPageLoader";
 import socketIOClient from "socket.io-client";
+import ButtonWithLoader from "../../components/global/ButtonWithLoader";
 import AuthenticatedRoute from "../../components/global/AuthenticatedRoute";
 
 interface StateProps {
@@ -55,8 +56,29 @@ const Scores = ({ redirectToHome }) => {
   );
 };
 
+const AbandonedGame = ({ redirectToHome }) => {
+  return (
+    <>
+      <div className="text-center">
+        <h3>Oops!</h3>
+        <p>This game has been abandoned :(</p>
+        <Button
+          variant="primary"
+          onClick={redirectToHome}
+          className="w-50 mt-4"
+        >
+          Start a new game
+        </Button>
+      </div>
+    </>
+  );
+};
+
 const GamePage: NextPage<LayoutPageProps> = () => {
   const [isStartingGame, setIsStartingGame] = useState(false);
+  const [isExitModalVisible, setIsExitModalVisible] = useState(false);
+  const [hasConfirmedAbandon, setHasConfirmedAbandon] = useState(false);
+  const [isAbandoningGame, setIsAbandoningGame] = useState(false);
   const { game, user } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -65,8 +87,8 @@ const GamePage: NextPage<LayoutPageProps> = () => {
       };
     }
   );
-  
-  let protocol = 'http:'
+
+  let protocol = "http:";
   if (process.browser) {
     protocol = window.location.protocol;
   }
@@ -95,15 +117,42 @@ const GamePage: NextPage<LayoutPageProps> = () => {
     setUser(userData);
   };
 
+  const quitGame = async () => {
+    setHasConfirmedAbandon(true);
+    setIsAbandoningGame(true);
+    const game = await abandonGame(gameId);
+    router.push("/");
+  };
+
   useEffect(() => {
     let socket = socketIOClient(`${protocol}//sike-api.herokuapp.com`); // TODO: get from central config thing.
     socket.on(gameId, () => {
       fetchGame();
     });
+
     // note: dont use ://sike-api.herokuapp.com in the above line. doesnt work.
   }, []);
 
   useEffect(() => {
+    Router.beforePopState(() => {
+      //if the game has been abandoned. immediately exit
+      if (game.status === "abandoned") {
+        return true;
+      }
+      if (!isExitModalVisible) {
+        router.push("/game/[gameId]", `/game/${gameId}`);
+        setIsExitModalVisible(true);
+      } else {
+        if (hasConfirmedAbandon) {
+          return true;
+        }
+      }
+      return false;
+    });
+  });
+
+  useEffect(() => {
+    console.log("here");
     fetchGame();
     fetchUser();
     // TODO: reconnect when socket breals.
@@ -133,7 +182,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   };
 
   const redirectToHome = () => {
-    Router.replace("/");
+    router.push("/");
   };
 
   const getGameByStatus = () => {
@@ -148,6 +197,8 @@ const GamePage: NextPage<LayoutPageProps> = () => {
         return Questions({ ...props, updateGame });
       case "finished":
         return Scores({ redirectToHome });
+      case "abandoned":
+        return AbandonedGame({ redirectToHome });
       default:
         return;
     }
@@ -165,6 +216,38 @@ const GamePage: NextPage<LayoutPageProps> = () => {
           )}
         </Row>
       </Container>
+      <Modal
+        show={isExitModalVisible}
+        onHide={() => setIsExitModalVisible(false)}
+        className="text-dark"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Abandon game?</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>
+            The game will end if you leave it. Is this really what you want? :(
+          </p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setIsExitModalVisible(false)}
+          >
+            No I want to play!
+          </Button>
+          <div>
+            <ButtonWithLoader
+              buttonVariant="primary"
+              onClick={() => quitGame()}
+              buttonText={"Yes I'm a loser"}
+              isLoading={isAbandoningGame}
+            />
+          </div>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

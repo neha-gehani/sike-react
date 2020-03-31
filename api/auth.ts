@@ -8,7 +8,9 @@ export class Auth {
 
   constructor() {
     const token = Cookie.get(COOKIES.authToken);
-    this.setToken(token);
+    if (token) {
+      this.setToken(token);
+    }
   }
 
   getToken() {

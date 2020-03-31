@@ -5,7 +5,6 @@ import Router from "next/router";
 import withRedux from "next-redux-wrapper";
 import { store } from "../store";
 import { Provider } from "react-redux";
-import AuthenticatedRoute from "../components/global/AuthenticatedRoute";
 import { useEffect } from "react";
 
 export interface LayoutPageProps {
@@ -19,7 +18,6 @@ interface IProps {
 }
 
 function App({ Component, pageProps, store }: IProps) {
-  
   return (
     <Provider store={store}>
       <div className="app-container">

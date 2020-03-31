@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { isAuthenticated, getToken } from "../../api/auth";
 import Router from "next/router";
 import { updateUserStore } from "../../states/user/actions";
@@ -9,8 +9,9 @@ interface AuthenticatedRouteProps {
   className?: string;
 }
 
-const AuthenticatedRoute: React.FC<AuthenticatedRouteProps> = ({ className }) => {
-  
+const AuthenticatedRoute: React.FC<AuthenticatedRouteProps> = ({
+  className
+}) => {
   const dispatch = useDispatch();
 
   const setUser = userData => {
@@ -19,8 +20,8 @@ const AuthenticatedRoute: React.FC<AuthenticatedRouteProps> = ({ className }) =>
 
   const fetchUser = async () => {
     const userData = await getUser();
-    if(!userData){
-      Router.push('/login');
+    if (!userData) {
+      Router.push("/login");
     }
     setHasFetchedUser(false);
     setUser(userData);
@@ -29,20 +30,19 @@ const AuthenticatedRoute: React.FC<AuthenticatedRouteProps> = ({ className }) =>
   const [hasFetchedUser, setHasFetchedUser] = useState(true);
 
   useEffect(() => {
-    if(hasFetchedUser) {
+    if (hasFetchedUser) {
       const isLoggedIn = isAuthenticated();
 
-      if(!isLoggedIn) {
-        Router.push('/login');
+      if (!isLoggedIn) {
+        Router.push("/login");
       } else {
-        console.log('Fetched user')
+        console.log("Fetched user");
         fetchUser();
       }
     }
-    
   }, [hasFetchedUser]);
 
-  return (<></>);
+  return <></>;
 };
 
 export default AuthenticatedRoute;

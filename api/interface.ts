@@ -20,7 +20,6 @@ export interface Answer {
 export interface Vote {
   id: number;
   name: string;
-  
 }
 
 export interface Question {
@@ -42,5 +41,5 @@ export interface Game {
   participants: Participant[];
   questions?: Question[];
   scores?: Score[];
-  status: "created" | "active" | "finished";
+  status: "created" | "active" | "abandoned" | "finished";
 }

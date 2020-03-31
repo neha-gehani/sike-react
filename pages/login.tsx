@@ -18,7 +18,7 @@ const Login: NextPage<LoginPageProps> = () => {
       setIsLoading(true);
       await guestLogin(name);
       setIsLoading(false);
-      Router.push("/");
+      Router.replace("/");
     }
   };
 
