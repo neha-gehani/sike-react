@@ -4,6 +4,7 @@ import Router from "next/router";
 import { updateUserStore } from "../../states/user/actions";
 import { useDispatch } from "react-redux";
 import { getUser } from "../../api/user";
+import { Toast } from "react-bootstrap";
 
 interface AuthenticatedRouteProps {
   className?: string;
@@ -12,6 +13,9 @@ interface AuthenticatedRouteProps {
 const AuthenticatedRoute: React.FC<AuthenticatedRouteProps> = ({
   className
 }) => {
+  const [hasFetchedUser, setHasFetchedUser] = useState(true);
+  const [isAuthError, setIsAuthError] = useState(false);
+
   const dispatch = useDispatch();
 
   const setUser = userData => {
@@ -21,20 +25,22 @@ const AuthenticatedRoute: React.FC<AuthenticatedRouteProps> = ({
   const fetchUser = async () => {
     const userData = await getUser();
     if (!userData) {
+      setIsAuthError(true);
       Router.push("/login");
+      setIsAuthError(false);
     }
     setHasFetchedUser(false);
     setUser(userData);
   };
-
-  const [hasFetchedUser, setHasFetchedUser] = useState(true);
 
   useEffect(() => {
     if (hasFetchedUser) {
       const isLoggedIn = isAuthenticated();
 
       if (!isLoggedIn) {
+        setIsAuthError(true);
         Router.push("/login");
+        setIsAuthError(false);
       } else {
         console.log("Fetched user");
         fetchUser();
@@ -42,7 +48,37 @@ const AuthenticatedRoute: React.FC<AuthenticatedRouteProps> = ({
     }
   }, [hasFetchedUser]);
 
-  return <></>;
+  return (
+    <>
+      {isAuthError ? (
+        <div
+          aria-live="polite"
+          aria-atomic="true"
+          style={{
+            position: "relative",
+            minHeight: "100px"
+          }}
+        >
+          <Toast
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0
+            }}
+            delay={5000}
+            autohide
+          >
+            <Toast.Header>
+              <strong className="mr-auto">Error</strong>
+            </Toast.Header>
+            <Toast.Body>Please login to continue</Toast.Body>
+          </Toast>
+        </div>
+      ) : (
+        <></>
+      )}
+    </>
+  );
 };
 
 export default AuthenticatedRoute;
