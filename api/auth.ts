@@ -18,7 +18,7 @@ export class Auth {
   }
 
   setToken(newToken: string) {
-    if(!!newToken) {
+    if (!!newToken) {
       Cookie.set(COOKIES.authToken, newToken);
       this.token = newToken;
     }
@@ -47,4 +47,9 @@ export const isAuthenticated = () => {
 
 export const getToken = () => {
   return auth.getToken();
+};
+
+export const deleteToken = () => {
+  auth.setToken(undefined);
+  Cookie.remove(COOKIES.authToken);
 };
