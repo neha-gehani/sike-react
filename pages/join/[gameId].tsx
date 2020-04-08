@@ -14,6 +14,7 @@ import TextForm from "../../components/global/TextForm";
 
 import { InitialState } from "../../store";
 import { updateUserStore } from "../../states/user/actions";
+import AuthenticatedRoute from "../../components/global/AuthenticatedRoute";
 
 interface StateProps {
   user: User;
@@ -22,15 +23,16 @@ interface StateProps {
 const JoinDynamicGame: NextPage<LayoutPageProps> = () => {
   const { user } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
+      console.log(state.user);
       return {
-        user: state.user
+        user: state.user,
       };
     }
   );
 
   const dispatch = useDispatch();
 
-  const setUser = userData => {
+  const setUser = (userData) => {
     dispatch(updateUserStore(userData));
   };
 
