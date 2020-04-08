@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NextPage } from "next";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Alert } from "react-bootstrap";
 import { createGame } from "../api/game";
 import { User } from "../api/interface";
 import Router, { useRouter } from "next/router";
@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { InitialState } from "../store";
 import ButtonWithLoader from "../components/global/ButtonWithLoader";
 import AuthenticatedRoute from "../components/global/AuthenticatedRoute";
+import { ApiError } from "../api/httpClient";
 
 interface StateProps {
   user: User;
@@ -17,6 +18,8 @@ interface StateProps {
 const Home: NextPage<LayoutPageProps> = props => {
   const router = useRouter();
   const [isCreatingGame, setIsCreatingGame] = useState(false);
+  const [error, setError] = useState<String>(undefined);
+
   const { user } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -25,12 +28,18 @@ const Home: NextPage<LayoutPageProps> = props => {
     }
   );
 
-
   const newGame = async () => {
     setIsCreatingGame(true);
-    const gameDetails = await createGame();
-    setIsCreatingGame(false);
-    router.push("/game/[gameId]", `/game/${gameDetails.identifier}`);
+    await createGame()
+      .then(gameDetails => {
+        setError("");
+        setIsCreatingGame(false);
+        router.push("/game/[gameId]", `/game/${gameDetails.identifier}`);
+      })
+      .catch(err => {
+        setIsCreatingGame(false);
+        setError((err as ApiError).response.message);
+      });
   };
 
   const joinGame = () => {
@@ -44,6 +53,11 @@ const Home: NextPage<LayoutPageProps> = props => {
         <Row className="landing-container h-100 align-items-stretch">
           <Col>
             <div className="h-100 d-flex flex-column justify-content-start align-items-center">
+              {error && (
+                <Alert variant="danger" className="w-100">
+                  {error}
+                </Alert>
+              )}
               {user.id ? (
                 <div className="text-light w-100 text-center">
                   <h2>Hello, {user.name}!</h2>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NextPage, NextPageContext } from "next";
-import { Container, Row, Col, Button, Modal } from "react-bootstrap";
+import { Container, Row, Col, Button, Modal, Alert } from "react-bootstrap";
 
 import { Game, User } from "../../api/interface";
 import { getUser } from "../../api/user";
@@ -22,6 +22,7 @@ import FullPageLoader from "../../components/global/FullPageLoader";
 import socketIOClient from "socket.io-client";
 import ButtonWithLoader from "../../components/global/ButtonWithLoader";
 import AuthenticatedRoute from "../../components/global/AuthenticatedRoute";
+import { ApiError } from "../../api/httpClient";
 
 interface StateProps {
   game: Game;
@@ -79,6 +80,8 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   const [isExitModalVisible, setIsExitModalVisible] = useState(false);
   const [hasConfirmedAbandon, setHasConfirmedAbandon] = useState(false);
   const [isAbandoningGame, setIsAbandoningGame] = useState(false);
+  const [error, setError] = useState<String>(undefined);
+
   const { game, user } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -108,20 +111,38 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   };
 
   const fetchGame = async () => {
-    const gameData = await getGame(gameId);
-    setGame(gameData);
+    await getGame(gameId)
+      .then(gameData => {
+        setGame(gameData);
+      })
+      .catch(err => {
+        setError((err as ApiError).response.message);
+      });
   };
 
   const fetchUser = async () => {
-    const userData = await getUser();
-    setUser(userData);
+    await getUser()
+      .then(userData => {
+        setUser(userData);
+      })
+      .catch(err => {
+        setError((err as ApiError).response.message);
+      });
   };
 
   const quitGame = async () => {
     setHasConfirmedAbandon(true);
     setIsAbandoningGame(true);
-    const game = await abandonGame(gameId);
-    router.push("/");
+    await abandonGame(gameId)
+      .then(game => {
+        router.push("/");
+      })
+      .catch(err => {
+        setIsAbandoningGame(false);
+        setHasConfirmedAbandon(false);
+        setIsExitModalVisible(false);
+        setError((err as ApiError).response.message);
+      });
   };
 
   useEffect(() => {
@@ -171,14 +192,21 @@ const GamePage: NextPage<LayoutPageProps> = () => {
 
   const startNewGame = async () => {
     setIsStartingGame(true);
-    const gameDetails = await startGame(gameId);
-    setIsStartingGame(false);
-    setGame(gameDetails);
+    const gameDetails = await startGame(gameId)
+      .then(game => {
+        setIsStartingGame(false);
+        setGame(gameDetails);
+      })
+      .catch(err => {
+        setIsStartingGame(false);
+        setError((err as ApiError).response.message);
+      });
   };
 
   const updateGame = async () => {
-    const updatedGame = await getGame(gameId);
-    setGame(updatedGame);
+    // const updatedGame = await getGame(gameId);
+    // setGame(updatedGame);
+    fetchGame();
   };
 
   const redirectToHome = () => {
@@ -209,6 +237,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
       <AuthenticatedRoute />
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">
+          {error && <Alert variant="danger">{error}</Alert>}
           {game.identifier && user.id ? (
             <Col>{getGameByStatus()}</Col>
           ) : (

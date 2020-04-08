@@ -1,5 +1,5 @@
 import React, { useState, MouseEvent, useEffect } from "react";
-import { Button } from "react-bootstrap";
+import classnames from "classnames";
 import ButtonWithLoader from "./ButtonWithLoader";
 
 interface TextFormProps {
@@ -10,6 +10,7 @@ interface TextFormProps {
   buttonText: string;
   isLoading?: boolean;
   initialValue?: string | string[];
+  errorText?: string;
 }
 
 const TextForm: React.FC<TextFormProps> = ({
@@ -19,7 +20,8 @@ const TextForm: React.FC<TextFormProps> = ({
   placeholder,
   buttonText,
   isLoading,
-  initialValue
+  initialValue,
+  errorText
 }) => {
   const [text, setText] = useState(initialValue || "");
 
@@ -33,13 +35,16 @@ const TextForm: React.FC<TextFormProps> = ({
       {headerText && <h2 className="my-4 text-light">{headerText}</h2>}
       <div className="name w-100 mb-3">
         <input
-          className="form-control"
+          className={classnames(["form-control"], {
+            "is-invalid": errorText && errorText.length > 0
+          })}
           type="text"
           maxLength={15}
           value={text}
           onChange={e => updateText(e.target.value)}
           placeholder={placeholder}
         />
+        {errorText && <div className="invalid-feedback">{errorText}</div>}
       </div>
       <div className="submit w-100 mb-3">
         <ButtonWithLoader

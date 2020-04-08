@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import flatten from 'lodash/flatten';
-import { Row, Col, ListGroup, Badge, Button } from "react-bootstrap";
+import flatten from "lodash/flatten";
+import { Row, Col, ListGroup, Badge, Button, Alert } from "react-bootstrap";
 import { Answer, Vote, User, Question } from "../../../api/interface";
 import { voteForAnswer } from "../../../api/answer";
+import { ApiError } from "../../../api/httpClient";
 
 interface VotingProps {
   user: User;
@@ -10,65 +11,73 @@ interface VotingProps {
   // onQuestionAnswered: () => void;
 }
 
-
 const Voting: React.FC<VotingProps> = ({
   currentQuestion,
-  user,
+  user
   // onQuestionAnswered
 }) => {
-
+  const [error, setError] = useState<String>(undefined);
   let selectedAnswerTemp = 0;
-  let voteStateTemp = 'default';
+  let voteStateTemp = "default";
 
-  const castVote = async (answerId) => {
+  const castVote = async answerId => {
     // set an interim state while the API call happens
     setSelectedAnswer(answerId);
-    setVoteState('answering');
+    setVoteState("answering");
 
     // make the API call to cast the vote
-    await voteForAnswer(answerId);
-    
-    // update the state to done
-    setVoteState('answered');
-  }
+    await voteForAnswer(answerId)
+      .then(answer => {
+        setError("");
 
-  const getVoteState: (state: string, data: any) => void =
-    function(state, data) {
-      if(state === 'answering') {
-        return (<>
-          <Badge variant="secondary">
-            Voting
-          </Badge>
-        </>)
-      } 
-      return (<>
-          <Badge variant="success">
-            done
-          </Badge>
-        </>)
-     };
+        // update the state to done
+        setVoteState("answered");
+      })
+      .catch(err => {
+        setError((err as ApiError).response.message);
+      });
+  };
+
+  const getVoteState: (state: string, data: any) => void = function(
+    state,
+    data
+  ) {
+    if (state === "answering") {
+      return (
+        <>
+          <Badge variant="secondary">Voting</Badge>
+        </>
+      );
+    }
+    return (
+      <>
+        <Badge variant="success">Done</Badge>
+      </>
+    );
+  };
 
   // Vote can have 3 states default | answering | answered
   // This function is called only if the state is not default
-  const getVoteByState = (answer) => {
-    if(answer.id === selectedAnswer) {
-        return getVoteState(voteState, {answer, selectedAnswer});
+  const getVoteByState = answer => {
+    if (answer.id === selectedAnswer) {
+      return getVoteState(voteState, { answer, selectedAnswer });
     }
-    return (<></>);
-  }
- 
+    return <></>;
+  };
 
   // prepare a list of all the people who have voted
-  const peopleVoted = flatten(currentQuestion.answers.map((answer: Answer) => {
-    const names = answer.votes.map((vote: Vote, index) => {
-      if(vote.name === user.name) {
-        voteStateTemp = 'answered';
-        selectedAnswerTemp = answer.id;
-      }
-      return vote
+  const peopleVoted = flatten(
+    currentQuestion.answers.map((answer: Answer) => {
+      const names = answer.votes.map((vote: Vote, index) => {
+        if (vote.name === user.name) {
+          voteStateTemp = "answered";
+          selectedAnswerTemp = answer.id;
+        }
+        return vote;
+      });
+      return names;
     })
-    return names
-  }));
+  );
 
   const [voteState, setVoteState] = useState(voteStateTemp);
   const [selectedAnswer, setSelectedAnswer] = useState(selectedAnswerTemp);
@@ -77,39 +86,47 @@ const Voting: React.FC<VotingProps> = ({
     <>
       <Row className="voting-answers">
         <Col>
+          {error && <Alert variant="danger">{error}</Alert>}
           <h3 className="mb-4">Pick your favourite answer</h3>
           <ListGroup variant="flush">
             {currentQuestion.answers.map((answer: Answer, index) => {
               if (answer.user.id === user.id) {
                 return (
                   <ListGroup.Item key={index}>
-                    {answer.answerStr} 
-                    <Badge 
+                    {answer.answerStr}
+                    <Badge
                       className="users-answer"
                       variant="secondary"
-                      key={index}>your-answer</Badge>
-                    </ListGroup.Item>
+                      key={index}
+                    >
+                      your-answer
+                    </Badge>
+                  </ListGroup.Item>
                 );
               }
 
               return (
                 <ListGroup.Item key={index}>
                   {answer.answerStr}
-                  {voteState === "default" ? (<>
-                    <Button
-                      variant="primary"
-                      className="btn-small"
-                      onClick={e => {
-                        castVote(answer.id)
-                      }}>
-                      Vote
-                    </Button>
-                  </>) :
-                  getVoteByState(answer)}
+                  {voteState === "default" ? (
+                    <>
+                      <Button
+                        variant="primary"
+                        className="btn-small"
+                        onClick={e => {
+                          castVote(answer.id);
+                        }}
+                      >
+                        Vote
+                      </Button>
+                    </>
+                  ) : (
+                    getVoteByState(answer)
+                  )}
                 </ListGroup.Item>
               );
             })}
-          </ListGroup> 
+          </ListGroup>
         </Col>
       </Row>
       <Row className="users-answered">
