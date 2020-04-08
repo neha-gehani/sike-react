@@ -16,18 +16,17 @@ import { InitialState } from "../../store";
 import { updateUserStore } from "../../states/user/actions";
 
 interface StateProps {
- user: User;
+  user: User;
 }
 
 const JoinDynamicGame: NextPage<LayoutPageProps> = () => {
-
   const { user } = useSelector<InitialState, StateProps>(
-   (state: InitialState) => {
-     return {
-       user: state.user
-     };
-   }
- );
+    (state: InitialState) => {
+      return {
+        user: state.user
+      };
+    }
+  );
 
   const dispatch = useDispatch();
 
@@ -36,49 +35,46 @@ const JoinDynamicGame: NextPage<LayoutPageProps> = () => {
   };
 
   const fetchUser = async () => {
-   const userData = await getUser();
-   if(!!userData) {
-    setUser(userData);
-    setIsAuth(true);
-   }
- };
+    const userData = await getUser();
+    if (!!userData) {
+      setUser(userData);
+      setIsAuth(true);
+    }
+  };
 
- const router = useRouter();
- const { gameId } = router.query;
+  const router = useRouter();
+  const { gameId } = router.query;
   useEffect(() => {
     const isLoggedIn = isAuthenticated();
-    if(isLoggedIn) {
+    if (isLoggedIn) {
       fetchUser();
     }
-   
- }, [gameId]);
+  }, [gameId]);
 
   const join = async () => {
     if (code && code.length >= 3) {
       setIsJoining(true);
       const game = await joinGame(code);
       setIsJoining(false);
-      Router.push(`/game/${game.identifier}`);
+      router.push(`/game/${game.identifier}`);
     }
   };
 
   const doGuestLogin = async () => {
-   if (name && name.length >= 3) {
-     setIsLoading(true);
-     try{
-      const user = await guestLogin(name);
-      setIsLoading(false);
-      setIsAuth(true);
-      setUser(user);
-     } catch(err) {
-      console.log('No Session')
-     }
-     
+    if (name && name.length >= 3) {
+      setIsLoading(true);
+      try {
+        const user = await guestLogin(name);
+        setIsLoading(false);
+        setIsAuth(true);
+        setUser(user);
+      } catch (err) {
+        console.log("No Session");
+      }
+    }
+  };
 
-   }
- };
-
- const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
 
   const [code, setCode] = useState(gameId);
   const [isJoining, setIsJoining] = useState(false);
@@ -92,27 +88,27 @@ const JoinDynamicGame: NextPage<LayoutPageProps> = () => {
         <Row className="landing-container h-100 align-items-stretch">
           <Col>
             {!isAuth && (
-             <>
-              <TextForm
-                 onClick={doGuestLogin}
-                 onTextUpdated={setName}
-                 headerText="Welcome :)"
-                 buttonText="Let's get started!"
-                 placeholder="Tell us your name"
-                 isLoading={isLoading}
-              />
-             </>
+              <>
+                <TextForm
+                  onClick={doGuestLogin}
+                  onTextUpdated={setName}
+                  headerText="Welcome :)"
+                  buttonText="Let's get started!"
+                  placeholder="Tell us your name"
+                  isLoading={isLoading}
+                />
+              </>
             )}
             {isAuth && (
-             <TextForm
-              onClick={join}
-              onTextUpdated={setCode}
-              headerText="Join game"
-              buttonText="Join now"
-              placeholder="Enter the game code"
-              isLoading={isJoining}
-              initialValue={gameId}
-            />
+              <TextForm
+                onClick={join}
+                onTextUpdated={setCode}
+                headerText="Join game"
+                buttonText="Join now"
+                placeholder="Enter the game code"
+                isLoading={isJoining}
+                initialValue={gameId}
+              />
             )}
           </Col>
         </Row>

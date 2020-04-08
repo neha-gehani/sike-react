@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NextPage } from "next";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 
 import { joinGame } from "../../api/game";
 import { LayoutPageProps } from "../_app";
@@ -9,6 +9,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import TextForm from "../../components/global/TextForm";
 
 const JoinGame: NextPage<LayoutPageProps> = () => {
+  const router = useRouter();
   const [code, setCode] = useState("");
   const [isJoining, setIsJoining] = useState(false);
 
@@ -17,7 +18,7 @@ const JoinGame: NextPage<LayoutPageProps> = () => {
       setIsJoining(true);
       const game = await joinGame(code);
       setIsJoining(false);
-      Router.push("/game/[gameId]", `/game/${game.identifier}`);
+      router.push("/game/[gameId]", `/game/${game.identifier}`);
     }
   };
 

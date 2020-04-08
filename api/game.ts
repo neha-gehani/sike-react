@@ -24,3 +24,9 @@ export const getGame = async (gameId): Promise<Game> => {
 
   return result;
 };
+
+export const abandonGame = async (gameId): Promise<Game> => {
+  const result = await httpClient.post<Game>(`/game/${gameId}/abandon`);
+
+  return result;
+};
