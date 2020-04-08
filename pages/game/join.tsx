@@ -5,20 +5,28 @@ import Router, { useRouter } from "next/router";
 import { joinGame } from "../../api/game";
 import { LayoutPageProps } from "../_app";
 
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Alert } from "react-bootstrap";
 import TextForm from "../../components/global/TextForm";
+import { ApiError } from "../../api/httpClient";
 
 const JoinGame: NextPage<LayoutPageProps> = () => {
   const router = useRouter();
   const [code, setCode] = useState("");
   const [isJoining, setIsJoining] = useState(false);
+  const [error, setError] = useState<String>(undefined);
 
   const join = async () => {
     if (code && code.length >= 3) {
       setIsJoining(true);
-      const game = await joinGame(code);
-      setIsJoining(false);
-      router.push("/game/[gameId]", `/game/${game.identifier}`);
+      await joinGame(code)
+        .then(game => {
+          setIsJoining(false);
+          router.push("/game/[gameId]", `/game/${game.identifier}`);
+        })
+        .catch(err => {
+          setIsJoining(false);
+          setError((err as ApiError).response.message);
+        });
     }
   };
 
@@ -27,6 +35,7 @@ const JoinGame: NextPage<LayoutPageProps> = () => {
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">
           <Col>
+            {error && <Alert variant="danger">{error}</Alert>}
             <TextForm
               onClick={join}
               onTextUpdated={setCode}
