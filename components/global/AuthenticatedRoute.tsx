@@ -42,7 +42,6 @@ const AuthenticatedRoute: React.FC<AuthenticatedRouteProps> = ({
         Router.push("/login");
         setIsAuthError(false);
       } else {
-        console.log("Fetched user");
         fetchUser();
       }
     }
