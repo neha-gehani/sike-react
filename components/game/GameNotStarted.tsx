@@ -16,6 +16,11 @@ interface StateProps {
 }
 
 const GameNotStarted: React.FC<GameProps> = ({ onClickStart, isStarting }) => {
+
+  function getWaitingText(game: Game): string {
+    return game.user.id === userId ? 'You need at least 3 players to start the game' : 'Once we have 3, the host can hit start the game';
+  }
+
   const { game, userId } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -24,6 +29,7 @@ const GameNotStarted: React.FC<GameProps> = ({ onClickStart, isStarting }) => {
       };
     }
   );
+
   return (
     <>
       <h3 className="mb-4">Waiting for participants...</h3>
@@ -34,17 +40,16 @@ const GameNotStarted: React.FC<GameProps> = ({ onClickStart, isStarting }) => {
       ))}
       {userId === game.user.id && game.participants.length >= 3 ? (
         <ButtonWithLoader
-          buttonVariant="outline-primary"
+          buttonVariant="primary"
           buttonText="Start game"
           onClick={onClickStart}
           className="w-100 my-3"
           isLoading={isStarting}
         />
-      ) : (<>
+      ) : (
       <Badge
         className="floating-badge dont-break-out"
-        variant='primary'>Once we have 3, the host can hit start the game</Badge>
-      </>)}
+        variant='primary'>{getWaitingText(game)}</Badge>)}
     </>
   );
 };

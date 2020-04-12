@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
   console.log(pathname);
 
   return (
-    <div className="bg-dark header-container">
+    <div className="header-container">
       <Container>
         <Row className="align-items-center">
           <Col>

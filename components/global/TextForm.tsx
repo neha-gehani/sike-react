@@ -32,7 +32,7 @@ const TextForm: React.FC<TextFormProps> = ({
 
   return (
     <>
-      {headerText && <h2 className="my-4 text-light">{headerText}</h2>}
+      {headerText && <h2 className="my-4">{headerText}</h2>}
       <div className="name w-100 mb-3">
         <input
           className={classnames(["form-control"], {

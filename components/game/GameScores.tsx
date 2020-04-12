@@ -49,7 +49,7 @@ const GameScores: React.FC<GameProps> = ({ onClickStart }) => {
           isWinner={scoreDetails.score === winnerScore}
         />
       ))}
-      <Button variant="secondary" onClick={onClickStart} className="w-100 my-3">
+      <Button variant="primary" onClick={onClickStart} className="w-100 my-3">
         Start a new game
       </Button>
     </>

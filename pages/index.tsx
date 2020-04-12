@@ -47,7 +47,7 @@ const Home: NextPage<LayoutPageProps> = props => {
   };
 
   return (
-    <div className="bg-dark page">
+    <div className="page">
       <AuthenticatedRoute />
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">
@@ -59,7 +59,7 @@ const Home: NextPage<LayoutPageProps> = props => {
                 </Alert>
               )}
               {user.id ? (
-                <div className="text-light w-100 text-center">
+                <div className="w-100 text-center">
                   <h2>Hello, {user.name}!</h2>
                   <div className="submit w-100 mb-3">
                     <Button

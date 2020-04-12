@@ -31,7 +31,7 @@ const JoinGame: NextPage<LayoutPageProps> = () => {
   };
 
   return (
-    <div className="bg-dark page">
+    <div className="page">
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">
           <Col>
