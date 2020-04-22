@@ -24,27 +24,28 @@ const JoinDynamicGame: NextPage<LayoutPageProps> = () => {
   const [error, setError] = useState<String>(undefined);
   const { user } = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
+      console.log(state.user);
       return {
-        user: state.user
+        user: state.user,
       };
     }
   );
 
   const dispatch = useDispatch();
 
-  const setUser = userData => {
+  const setUser = (userData) => {
     dispatch(updateUserStore(userData));
   };
 
   const fetchUser = async () => {
     await getUser()
-      .then(userData => {
+      .then((userData) => {
         if (!!userData) {
           setUser(userData);
           setIsAuth(true);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         setError((err as ApiError).response.message);
       });
   };
@@ -62,11 +63,11 @@ const JoinDynamicGame: NextPage<LayoutPageProps> = () => {
     if (code && code.length >= 3) {
       setIsJoining(true);
       await joinGame(code)
-        .then(game => {
+        .then((game) => {
           setIsJoining(false);
           router.push(`/game/${game.identifier}`);
         })
-        .catch(err => {
+        .catch((err) => {
           setIsJoining(false);
           setError((err as ApiError).response.message);
         });
@@ -78,12 +79,12 @@ const JoinDynamicGame: NextPage<LayoutPageProps> = () => {
       setIsLoading(true);
       try {
         await guestLogin(name)
-          .then(user => {
+          .then((user) => {
             setIsLoading(false);
             setIsAuth(true);
             setUser(user);
           })
-          .catch(err => {
+          .catch((err) => {
             setIsLoading(false);
             setError((err as ApiError).response.message);
           });

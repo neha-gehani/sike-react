@@ -29,7 +29,7 @@ interface StateProps {
   user: User;
 }
 
-const Lobby = props => {
+const Lobby = (props) => {
   return (
     <>
       <GameCode />
@@ -86,7 +86,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
     (state: InitialState) => {
       return {
         game: state.game,
-        user: state.user
+        user: state.user,
       };
     }
   );
@@ -102,11 +102,11 @@ const GamePage: NextPage<LayoutPageProps> = () => {
 
   const dispatch = useDispatch();
 
-  const setGame = gameData => {
+  const setGame = (gameData) => {
     dispatch(updateGameStore(gameData));
   };
 
-  const setUser = userData => {
+  const setUser = (userData) => {
     dispatch(updateUserStore(userData));
   };
 
@@ -148,6 +148,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   useEffect(() => {
     let socket = socketIOClient(`${protocol}//sike-api.herokuapp.com`); // TODO: get from central config thing.
     socket.on(gameId, () => {
+      console.log("socket update");
       fetchGame();
     });
 
@@ -216,7 +217,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   const getGameByStatus = () => {
     const props = {
       game,
-      user
+      user,
     };
     switch (game.status) {
       case "created":

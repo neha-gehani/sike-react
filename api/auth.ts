@@ -8,7 +8,7 @@ export class Auth {
 
   constructor() {
     const token = Cookie.get(COOKIES.authToken);
-    if (token) {
+    if (token !== undefined) {
       this.setToken(token);
     }
   }
@@ -31,7 +31,7 @@ export const guestLogin = async (name: string): Promise<User> => {
   const result = await httpClient.post<User>(
     "/auth/guest",
     {
-      name: name
+      name: name,
     },
     false
   );

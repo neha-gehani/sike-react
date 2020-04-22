@@ -11,19 +11,21 @@ interface AuthenticatedRouteProps {
 }
 
 const AuthenticatedRoute: React.FC<AuthenticatedRouteProps> = ({
-  className
+  className,
 }) => {
   const [hasFetchedUser, setHasFetchedUser] = useState(true);
   const [isAuthError, setIsAuthError] = useState(false);
 
   const dispatch = useDispatch();
 
-  const setUser = userData => {
+  const setUser = (userData) => {
     dispatch(updateUserStore(userData));
   };
 
   const fetchUser = async () => {
     const userData = await getUser();
+    console.log("---------");
+    console.log(userData);
     if (!userData) {
       setIsAuthError(true);
       Router.push("/login");
@@ -42,7 +44,6 @@ const AuthenticatedRoute: React.FC<AuthenticatedRouteProps> = ({
         Router.push("/login");
         setIsAuthError(false);
       } else {
-        console.log("Fetched user");
         fetchUser();
       }
     }
