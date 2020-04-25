@@ -41,7 +41,7 @@ const VotingResults: React.FC<VotingResultsProps> = ({
       </Row>
       <Row className="user-siked">
         <Col>
-          <h3 className="mb-4">{ userSiked.length === 0 ? "Let's wait too see who picks your answer" : "People who picked your answer..." }</h3>
+          <h3 className="mb-4">{ userSiked.length === 0 ? "Let's wait to see who picks your answer" : "People who picked your answer..." }</h3>
           <ListGroup variant="flush">
             {userSiked.map((person: User, index) => {
               return (
