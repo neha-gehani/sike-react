@@ -38,13 +38,6 @@ const GameNotStarted: React.FC<GameProps> = ({ onClickStart, isStarting }) => {
           {participant.name}
         </p>
       ))}
-      <ButtonWithLoader
-        buttonVariant="primary"
-        buttonText="Start game"
-        onClick={onClickStart}
-        className="w-100 my-3"
-        isLoading={isStarting}
-      />
       {userId === game.user.id && game.participants.length >= 3 ? (
         <ButtonWithLoader
           buttonVariant="primary"
