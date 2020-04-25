@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { NextPage } from "next";
 import Router, { useRouter } from "next/router";
 
@@ -29,16 +29,6 @@ const JoinGame: NextPage<LayoutPageProps> = () => {
         });
     }
   };
-
-  useEffect(() => {
-    checkGameJoinable()
-  })
-
-  const checkGameJoinable = async () => {
-    if (code && code.length >= 3) {
-      
-    }
-  }
 
   return (
     <div className="bg-dark page">
