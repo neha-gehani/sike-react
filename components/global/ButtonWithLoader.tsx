@@ -39,6 +39,7 @@ const ButtonWithLoader: React.FC<LoaderProps> = ({
         {isLoading ? (
           <InlineLoader
             isDark={
+              buttonVariant !== "primary" &&
               buttonVariant !== "secondary" &&
               buttonVariant !== "outline-primary"
             }

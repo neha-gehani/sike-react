@@ -1,5 +1,5 @@
 import React, { useState, MouseEvent, useEffect } from "react";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, Form } from "react-bootstrap";
 import { Answer, Game, User, Question } from "../../../api/interface";
 import { sendAnswer } from "../../../api/questions";
 import { voteForAnswer } from "../../../api/answer";
@@ -28,8 +28,17 @@ const NotAnswered: React.FC<NotAnsweredProps> = ({
     <Row className="not-answered-question">
       <Col>
         <h3 className="mb-4">{currentQuestion.questionStr}</h3>
+        {/* TODO: use FormControl.Input with ref */}
+        {/* <Form.Group controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            as="textarea"
+            onChange={e => console.log(e.target)}
+          />
+        </Form.Group> */}
         <textarea
-          className="answer"
+          className="answer form-control"
+          rows={4}
           onChange={e => setAnswer(e.target.value)}
         ></textarea>
         <ButtonWithLoader

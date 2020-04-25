@@ -233,7 +233,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   };
 
   return (
-    <div className="page">
+    <div className="page mt-4">
       <AuthenticatedRoute />
       <Container className="h-100">
         <Row className="landing-container h-100 align-items-stretch">

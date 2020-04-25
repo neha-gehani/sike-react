@@ -11,7 +11,7 @@ const Share: React.FC<ShareProps> = ({ title, text, url}) => {
 
   const showToast = (text) => {
     navigator.clipboard.writeText(text)
-    setToast('URL Copied')
+    setToast('URL Copied. Send it to your friends.')
     setShow(true)
   }
   const share = async () => {

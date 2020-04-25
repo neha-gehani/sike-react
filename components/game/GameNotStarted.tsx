@@ -1,5 +1,5 @@
 import React, { MouseEvent } from "react";
-import { Badge } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import { Game } from "../../api/interface";
 import { useSelector } from "react-redux";
 import { InitialState } from "../../store";
@@ -38,6 +38,13 @@ const GameNotStarted: React.FC<GameProps> = ({ onClickStart, isStarting }) => {
           {participant.name}
         </p>
       ))}
+      <ButtonWithLoader
+        buttonVariant="primary"
+        buttonText="Start game"
+        onClick={onClickStart}
+        className="w-100 my-3"
+        isLoading={isStarting}
+      />
       {userId === game.user.id && game.participants.length >= 3 ? (
         <ButtonWithLoader
           buttonVariant="primary"
@@ -47,9 +54,9 @@ const GameNotStarted: React.FC<GameProps> = ({ onClickStart, isStarting }) => {
           isLoading={isStarting}
         />
       ) : (
-      <Badge
-        className="floating-badge dont-break-out"
-        variant='primary'>{getWaitingText(game)}</Badge>)}
+      <Alert variant={"secondary"}>
+        {getWaitingText(game)}
+      </Alert>)}
     </>
   );
 };

@@ -1,6 +1,8 @@
 import "../assets/styles/index.scss";
 import Header from "../components/global/Header";
+import GameHeader from "../components/global/GameHeader";
 import { NextPage } from "next";
+import { useRouter } from "next/router"
 import Head from "next/dist/next-server/lib/head";
 import withRedux from "next-redux-wrapper";
 import { store } from "../store";
@@ -18,6 +20,7 @@ interface IProps {
 }
 
 function App({ Component, pageProps, store }: IProps) {
+  const router = useRouter();
   return (
     <Provider store={store}>
        <Head>
@@ -34,8 +37,9 @@ function App({ Component, pageProps, store }: IProps) {
         <link rel="apple-touch-icon" href="/apple-icon.png"></link>
         <meta name="theme-color" content="#6900ff"/>
       </Head>
-      <div className="app-container"> 
-        <Header />
+      <div className="app-container">
+        
+        {(router.pathname === '/login' || router.pathname === '/' || router.pathname === '/join/[gameId]') ? <Header /> : <GameHeader />}
         <Component {...pageProps} />
       </div>
     </Provider>
