@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { User } from "../../api/interface";
 import { getUser } from "../../api/user";
-import { joinGame } from "../../api/game";
+import { joinGame, getGame } from "../../api/game";
 import { guestLogin, isAuthenticated } from "../../api/auth";
 import { LayoutPageProps } from "../_app";
 
@@ -37,16 +37,16 @@ const JoinDynamicGame: NextPage<LayoutPageProps> = () => {
   };
 
   const fetchUser = async () => {
-    await getUser()
-      .then(userData => {
-        if (!!userData) {
-          setUser(userData);
-          setIsAuth(true);
-        }
-      })
-      .catch(err => {
-        setError((err as ApiError).response.message);
-      });
+    try {
+      const userData =  await getUser()
+      if (!!userData) {
+        setUser(userData);
+        setIsAuth(true);
+        checkGame();
+      }
+    } catch(err) {
+      setError((err as ApiError).response.message);
+    }
   };
 
   const router = useRouter();
@@ -61,15 +61,14 @@ const JoinDynamicGame: NextPage<LayoutPageProps> = () => {
   const join = async () => {
     if (code && code.length >= 3) {
       setIsJoining(true);
-      await joinGame(code)
-        .then(game => {
-          setIsJoining(false);
-          router.push(`/game/${game.identifier}`);
-        })
-        .catch(err => {
-          setIsJoining(false);
-          setError((err as ApiError).response.message);
-        });
+      try {
+        const game = await joinGame(code);
+        setIsJoining(false);
+        router.push(`/game/${game.identifier}`);
+      } catch(err) {
+        setIsJoining(false);
+        setError((err as ApiError).response.message);
+      }
     }
   };
 
@@ -77,21 +76,27 @@ const JoinDynamicGame: NextPage<LayoutPageProps> = () => {
     if (name && name.length >= 3) {
       setIsLoading(true);
       try {
-        await guestLogin(name)
-          .then(user => {
-            setIsLoading(false);
-            setIsAuth(true);
-            setUser(user);
-          })
-          .catch(err => {
-            setIsLoading(false);
-            setError((err as ApiError).response.message);
-          });
-      } catch (err) {
-        console.log("No Session");
+        const user = await guestLogin(name)
+        setIsLoading(false);
+        setIsAuth(true);
+        setUser(user);
+      } catch(err) {
+        setIsLoading(false);
+        setError((err as ApiError).response.message);
       }
     }
   };
+
+  const checkGame = async () => {
+    try {
+      const game = await getGame(code)
+      if (game.status === 'active') {
+        router.push(`/game/${game.identifier}`);
+      }
+    } catch(err) {
+      // Doing nothing here. let the user try joining another game.
+    }
+  }
 
   const [isAuth, setIsAuth] = useState(false);
 
