@@ -146,7 +146,7 @@ const GamePage: NextPage<LayoutPageProps> = () => {
   };
 
   useEffect(() => {
-    let socket = socketIOClient(`${protocol}//sike-api.herokuapp.com`); // TODO: get from central config thing.
+    let socket = socketIOClient(`https://kia-api.alzionlabs.com`); // TODO: get from central config thing.
     socket.on(gameId, () => {
       fetchGame();
     });
